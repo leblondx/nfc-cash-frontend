@@ -204,11 +204,11 @@ export default defineComponent({
 .main-login-content__signupl_link>a {
   text-decoration: none;
   font-size: 14px;
-  color: #4f77ff;
+  color: #1b5e20;
 }
 
 .main-login-content__signupl_link>a:hover {
-  color: #0056b3;
+  color: #1b5e20;
   text-decoration: underline;
 }
 
@@ -252,11 +252,11 @@ export default defineComponent({
 .main-login-content__form_forgot_link>a {
   font-size: 14px;
   text-decoration: none;
-  color: #4f77ff;
+  color: #1b5e20;
 }
 
 .main-login-content__form_forgot_link>a:hover {
-  color: #0056b3;
+  color: #1b5e20;
   text-decoration: underline;
 }
 
@@ -273,14 +273,14 @@ export default defineComponent({
   border: none;
   box-shadow: 0px 2px 3px #9c9c9c;
   font-size: 20px;
-  background-color: #4f77ff;
+  background-color: #1b5e20;
   color: #fff;
 }
 
 .main-login-content__form_submit>button:hover {
   color: #fff;
-  background-color: #0873e5;
-  border-color: #0062cc;
+  background-color: #1b5e1fe8;
+  border-color: #1b5e1fe8;
 }
 
 @media (max-width: 1024px) {

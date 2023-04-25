@@ -55,7 +55,7 @@ export default defineComponent({
 .main {
   width: 100%;
   height: 100vh;
-  background-color: #2196f3;
+  background-color: #1b5e20;
 }
 
 .container {
@@ -81,7 +81,7 @@ export default defineComponent({
   width: 65px;
   height: 65px;
   background-color: #fff;
-  color: #2196f3;
+  color: #1b5e20;
 }
 
 .main-content__title {
@@ -98,7 +98,7 @@ export default defineComponent({
 
 .main-content__link>button {
   cursor: pointer;
-  color: #2196f3;
+  color: #1b5e20;
   border: none;
   background-color: #fff;
   padding: 14px 16px;

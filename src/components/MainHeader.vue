@@ -1,6 +1,6 @@
 <template>
   <q-header elevated>
-    <q-toolbar>
+    <q-toolbar class="bg-green-10">
       <q-toolbar-title>
         {{ title }}
       </q-toolbar-title>
