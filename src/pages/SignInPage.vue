@@ -1,0 +1,517 @@
+<template>
+  <div>
+    <MainHeader activePage="sign-in" />
+    <div class="main-signin fixed-center">
+      <div class="container">
+        <div class="main-login">
+          <div class="main-login-content">
+            <div class="main-login-content__title">Войти в аккаунт</div>
+            <div class="main-login-content__signupl">
+              <div class="main-login-content__signupl_text">У вас нет аккаунта?</div>
+              <div class="main-login-content__signupl_link">
+                <a href="#">Регистрация</a>
+              </div>
+            </div>
+            <form class="main-login-content__form" @submit.prevent="submitAuthForm">
+              <div class="main-login-content__form_input" :class="{ error: v$.username.$errors.length }">
+                <input class="main-login-content__form_input_i" :class="{ 'input-error': v$.username.$errors.length > 0 }"
+                  type="text" placeholder="Логин" v-model.trim="authForm.username" @blur="v$.username.$touch()" />
+                <div class="input-errors" v-for="error of v$.username.$errors" :key="error.$uid">
+                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите логин" : "" }}
+                  </div>
+                </div>
+              </div>
+              <div class="main-login-content__form_input" :class="{ error: v$.password.$errors.length }">
+                <input class="main-login-content__form_input_i" :class="{ 'input-error': v$.password.$errors.length > 0 }"
+                  type="text" placeholder="Пароль" v-model.trim="authForm.password" @blur="v$.password.$touch()" />
+                <div class="input-errors" v-for="error of v$.password.$errors" :key="error.$uid">
+                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите пароль" :
+                    error.$message === "This field should be at least 8 characters long" ?
+                      "Это поле должно содержать не менее 8 символов" : "" }}
+                  </div>
+                </div>
+              </div>
+              <div class="main-login-content__form_forgot">
+                <div class="main-login-content__form_forgot_link">
+                  <a href="#">Забыли пароль?</a>
+                </div>
+              </div>
+              <div class="main-login-content__form_submit">
+                <button type="submit" @click.prevent="submitAuthForm">Войти</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="js">
+import { defineComponent, ref } from 'vue'
+import { useQuasar } from 'quasar'
+
+import { required, minLength } from '@vuelidate/validators'
+import { useVuelidate } from '@vuelidate/core'
+
+import MainHeader from "../components/MainHeader.vue"
+import { useAuthStore } from "../stores/auth"
+
+export default defineComponent({
+  name: "SignInPage",
+  setup() {
+    const $q = useQuasar()
+
+    const notifyNeed = (needMessage, needType, needPosition, needTimeout) => {
+      $q.notify({
+        type: needType,
+        message: needMessage,
+        progress: true,
+        position: needPosition,
+        timeout: needTimeout
+      })
+    }
+
+    const authStore = useAuthStore()
+
+    const authForm = ref({
+      username: '',
+      password: '',
+    })
+
+    const rules = {
+      username: {
+        required
+      },
+      password: {
+        required,
+        minLength: minLength(8),
+      },
+    }
+
+    const v$ = useVuelidate(rules, authForm)
+
+    const submitAuthForm = async () => {
+      v$.value.$touch()
+      if (v$.value.$invalid) {
+        notifyNeed("Не все поля заполнены", "warning", "top", 1000)
+      } else {
+        const formData = {
+          username: authForm.value.username,
+          password: authForm.value.password
+        }
+        const resActSignInUser = await authStore.actSignInUser(formData)
+        notifyNeed("Успешная авторизация", "positive", "top-right", 2000)
+        console.log("formData -->", formData)
+      }
+    }
+    return {
+      authForm,
+      v$,
+      submitAuthForm
+    }
+  },
+  components: {
+    MainHeader
+  }
+})
+</script>
+
+<style lang="scss" scoped>
+.main-signin {
+  width: 100%;
+}
+
+.container {
+  margin: 0 auto;
+  padding-right: 15px;
+  padding-left: 15px;
+  max-width: 1110px;
+}
+
+.main-login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 15px;
+  background-color: #ffffff;
+}
+
+.main-login-content {
+  width: 537px;
+  padding: 40px 30px 60px 30px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  -webkit-box-shadow: 0px 2px 6px 0px #1d2030;
+  box-shadow: 0px 2px 6px 0px #1d2030;
+}
+
+.main-login-content__title {
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #2d385e;
+  text-align: center;
+}
+
+.main-login-content__signupl {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-login-content__signupl_text {
+  font-size: 14px;
+  font-weight: 400;
+  color: #44525f;
+}
+
+.main-login-content__signupl_link {
+  margin-left: 5px;
+}
+
+.main-login-content__signupl_link>a {
+  text-decoration: none;
+  font-size: 14px;
+  color: #4f77ff;
+}
+
+.main-login-content__signupl_link>a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.main-login-content__form {
+  margin-top: 25px;
+}
+
+.main-login-content__form_input {
+  margin-bottom: 20px;
+}
+
+.main-login-content__form_input_i {
+  width: 100%;
+  height: 50px;
+  background-color: #fff;
+  color: #333333;
+  font-size: 18px;
+  padding: 12px 22px;
+  border-radius: 3px;
+  border: solid 1px #bcc2ce;
+  outline: none;
+  -webkit-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1), 0 0 2px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1), 0 0 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.input-error {
+  border: 1px solid #ff0000;
+}
+
+.error-msg {
+  color: #ff0000;
+  font-size: 11px;
+}
+
+.main-login-content__form_forgot {
+  display: flex;
+  justify-content: end;
+  margin: 0 0 10px;
+}
+
+.main-login-content__form_forgot_link>a {
+  font-size: 14px;
+  text-decoration: none;
+  color: #4f77ff;
+}
+
+.main-login-content__form_forgot_link>a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.main-login-content__form_submit {
+  margin-top: 20px;
+}
+
+.main-login-content__form_submit>button {
+  cursor: pointer;
+  width: 100%;
+  height: 48px;
+  padding: 8px 16px;
+  border-radius: 3px;
+  border: none;
+  box-shadow: 0px 2px 3px #9c9c9c;
+  font-size: 20px;
+  background-color: #4f77ff;
+  color: #fff;
+}
+
+.main-login-content__form_submit>button:hover {
+  color: #fff;
+  background-color: #0873e5;
+  border-color: #0062cc;
+}
+
+@media (max-width: 1024px) {
+  .main-login-content {
+    width: 517px;
+  }
+
+  .main-login-content__title {
+    font-size: 25px;
+  }
+
+  .main-login-content__signupl_text {
+    font-size: 13px;
+  }
+
+  .main-login-content__signupl_link>a {
+    font-size: 13px;
+  }
+
+  .main-login-content__form_input {
+    margin-bottom: 17px;
+  }
+
+  .main-login-content__form_input_i {
+    height: 47px;
+    font-size: 15px;
+  }
+
+  .main-login-content__form_forgot_link>a {
+    font-size: 13px;
+  }
+
+  .main-login-content__form_submit>button {
+    height: 45px;
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 926px) {
+  .main-signin {
+    height: 100vh;
+    overflow: auto;
+  }
+
+  .main-login {
+    margin-top: 100px;
+    padding: 0 15px 45px 15px;
+  }
+}
+
+@media (max-width: 568px) {
+  .main-login-content {
+    width: 100%;
+  }
+
+  .main-login-content__title {
+    font-size: 20px;
+  }
+
+  .main-login-content__signupl_text {
+    font-size: 11px;
+  }
+
+  .main-login-content__signupl_link>a {
+    font-size: 11px;
+  }
+
+  .main-login-content__form {
+    margin-top: 20px;
+  }
+
+  .main-login-content__form_input {
+    margin-bottom: 16px;
+  }
+
+  .main-login-content__form_input_i {
+    height: 45px;
+    font-size: 12px;
+  }
+
+  .main-login-content__form_input_i::placeholder {
+    font-size: 13px;
+  }
+
+  .main-login-content__form_forgot_link>a {
+    font-size: 11px;
+  }
+
+  .main-login-content__form_submit>button {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-login-content {
+    width: 100%;
+  }
+}
+
+@media (max-width: 428px) {
+  .main-signin {
+    height: auto;
+    overflow: none;
+  }
+
+  .main-login {
+    margin-top: 20px;
+  }
+
+  .error-msg {
+    font-size: 10px;
+  }
+
+  .main-login-content {
+    padding: 30px 30px 50px 30px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 390px) {
+  .main-login-content {
+    padding: 40px 30px 40px 30px;
+    width: 100%;
+  }
+
+  .main-login-content__title {
+    font-size: 18px;
+  }
+
+  .main-login-content__signupl_text {
+    font-size: 10px;
+  }
+
+  .main-login-content__signupl_link>a {
+    font-size: 10px;
+  }
+
+  .main-login-content__form_input {
+    margin-bottom: 14px;
+  }
+
+  .main-login-content__form_input_i {
+    height: 40px;
+    font-size: 11px;
+  }
+
+  .main-login-content__form_input_i::placeholder {
+    font-size: 12px;
+  }
+
+  .main-login-content__form_forgot_link>a {
+    font-size: 10px;
+  }
+
+  .main-login-content__form_submit>button {
+    height: 40px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 375px) {
+  .main-login-content {
+    padding: 30px 30px 40px 30px;
+    width: 100%;
+  }
+
+  .error-msg {
+    font-size: 9px;
+  }
+
+  .main-login-content__title {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+  }
+
+  .main-login-content__form {
+    margin-top: 15px;
+  }
+
+  .main-login-content__form_input {
+    margin-bottom: 13px;
+  }
+
+  .main-login-content__form_input_i {
+    height: 35px;
+    font-size: 10px;
+  }
+
+  .main-login-content__form_input_i::placeholder {
+    font-size: 11px;
+  }
+
+  .main-login-content__form_submit {
+    margin-top: 14px;
+  }
+
+  .main-login-content__form_submit>button {
+    height: 35px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 320px) {
+  .main-login {
+    margin-top: 80px;
+  }
+
+  .error-msg {
+    font-size: 8px;
+  }
+
+  .main-login-content {
+    padding: 20px 20px 30px 20px;
+    width: 100%;
+  }
+
+  .main-login-content__title {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+  }
+
+  .main-login-content__signupl {
+    flex-direction: column;
+    margin-top: 10px;
+  }
+
+  .main-login-content__signupl_text {
+    font-size: 9px;
+  }
+
+  .main-login-content__signupl_link {
+    margin-left: 0;
+  }
+
+  .main-login-content__signupl_link>a {
+    font-size: 9px;
+  }
+
+  .main-login-content__form_input {
+    margin-bottom: 12px;
+  }
+
+  .main-login-content__form_input_i {
+    height: 30px;
+    font-size: 9px;
+  }
+
+  .main-login-content__form_input_i::placeholder {
+    font-size: 10px;
+  }
+
+  .main-login-content__form_forgot_link>a {
+    font-size: 9px;
+  }
+
+  .main-login-content__form_submit {
+    margin-top: 10px;
+  }
+
+  .main-login-content__form_submit>button {
+    height: 30px;
+    font-size: 9px;
+  }
+}
+</style>
