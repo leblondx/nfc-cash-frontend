@@ -177,7 +177,7 @@ export default defineComponent({
       }
       await recoveryStore.actCheckRecoveryPassword(formData)
       if (recoveryStore.isCheckRecoveryPassword === false) {
-        router.push("/sign-in")
+        router.push("/recovery/e-recovery-password")
       }
     })
 

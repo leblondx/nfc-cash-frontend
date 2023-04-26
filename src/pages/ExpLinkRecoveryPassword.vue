@@ -5,11 +5,12 @@
         <div class="main-content__icon">
           <q-icon name="priority_high" />
         </div>
-        <div class="main-content__title">Ошибка подтверждения</div>
-        <div class="main-content__text">Попробуйте подтвердить ваш аккаунт в настройках вашего аккаунта</div>
-        <div class="main-content__text">Для перехода на страницу Входа в приложение нажмите кнопку "Авторизация"</div>
+        <div class="main-content__title">Восстановление пароля</div>
+        <div class="main-content__text">Время жизни ссылки для восстановления пароля истекла</div>
+        <div class="main-content__text">Перейдите на страницу "Забыли пароль?" и заполните форму ещё раз</div>
+        <div class="main-content__text">Для перехода на страницу Забыли пароль нажмите кнопку "Забыли пароль?"</div>
         <div class="main-content__link">
-          <button @click="goToAuth">Авторизация</button>
+          <button @click="goToForgot">Забыли пароль?</button>
         </div>
       </div>
     </div>
@@ -22,7 +23,7 @@ import { useQuasar } from 'quasar'
 import { useRouter } from "vue-router"
 
 export default defineComponent({
-  name: "ErrorVerifyEmailPage",
+  name: "ExpLinkRecoveryPasswordPage",
   setup() {
     const $q = useQuasar()
     const router = useRouter()
@@ -37,17 +38,18 @@ export default defineComponent({
       })
     }
 
-    notifyNeed("Ошибка подтверждения электронной почты", "warning", "top-right", 2000)
+    notifyNeed("Ссылка для восстановления пароля истекла", "warning", "top-right", 2000)
 
-    const goToAuth = () => {
+    const goToForgot = () => {
       $q.loading.show()
       setTimeout(() => {
         $q.loading.hide()
-        router.push("/sign-in")
+        router.push("/forgot-password")
       }, 3000)
     }
+
     return {
-      goToAuth
+      goToForgot
     }
   }
 })

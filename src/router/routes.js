@@ -16,6 +16,10 @@ const routes = [
         component: () => import("pages/RecoveryPassword.vue"),
       },
       {
+        path: "/recovery/e-recovery-password",
+        component: () => import("pages/ExpLinkRecoveryPassword.vue"),
+      },
+      {
         path: "/verify/verify-email/:id",
         component: () => import("pages/VerifyEmail.vue"),
       },
