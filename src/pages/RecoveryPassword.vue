@@ -1,43 +1,62 @@
 <template>
   <div>
-    <MainHeader activePage="sign-in" />
-    <div class="main-signin fixed-center">
+    <q-dialog v-model="alertSuccessRecoveryPassword">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Изменение пароля</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          Ваш пароль был успешно изменён. Для перехода на страницу входа нажмите на кнопку "OK"
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="OK" color="green" v-close-popup @click="alertClose" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <div class="main-signup fixed-center">
       <div class="container">
         <div class="main-login">
           <div class="main-login-content">
-            <div class="main-login-content__title">Войти в аккаунт</div>
-            <div class="main-login-content__signupl">
-              <div class="main-login-content__signupl_text">У вас нет аккаунта?</div>
-              <div class="main-login-content__signupl_link">
-                <router-link to="/sign-up">Регистрация</router-link>
-              </div>
+            <div class="main-login-content__title">
+              Изменение пароля
             </div>
-            <form class="main-login-content__form" @submit.prevent="submitAuthForm">
-              <div class="main-login-content__form_input" :class="{ error: v$.username.$errors.length }">
-                <input class="main-login-content__form_input_i" :class="{ 'input-error': v$.username.$errors.length > 0 }"
-                  type="text" placeholder="Логин" v-model.trim="authForm.username" @blur="v$.username.$touch()" />
-                <div class="input-errors" v-for="error of v$.username.$errors" :key="error.$uid">
-                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите логин" : "" }}
-                  </div>
-                </div>
-              </div>
-              <div class="main-login-content__form_input" :class="{ error: v$.password.$errors.length }">
-                <input class="main-login-content__form_input_i" :class="{ 'input-error': v$.password.$errors.length > 0 }"
-                  type="text" placeholder="Пароль" v-model.trim="authForm.password" @blur="v$.password.$touch()" />
-                <div class="input-errors" v-for="error of v$.password.$errors" :key="error.$uid">
-                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите пароль" :
+            <form class="main-login-content__form" @submit.prevent="submitRecoveryPassword">
+              <div class="main-login-content__form_input" :class="{ error: v$.newPassword.$errors.length }">
+                <input class="main-login-content__form_input_i"
+                  :class="{ 'input-error': v$.newPassword.$errors.length > 0 }" type="password" placeholder="Новый пароль"
+                  v-model.trim="recoveryPasswordForm.newPassword" @blur="v$.newPassword.$touch()" />
+                <div class="input-errors" v-for="error of v$.newPassword.$errors" :key="error.$uid">
+                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите новый пароль"
+                    :
                     error.$message === "This field should be at least 8 characters long" ?
                       "Это поле должно содержать не менее 8 символов" : "" }}
                   </div>
                 </div>
               </div>
-              <div class="main-login-content__form_forgot">
-                <div class="main-login-content__form_forgot_link">
-                  <router-link to="/forgot-password">Забыли пароль?</router-link>
+              <div class="main-login-content__form_input" :class="{ error: v$.confirmNewPassword.$errors.length }">
+                <input class="main-login-content__form_input_i"
+                  :class="{ 'input-error': v$.confirmNewPassword.$errors.length > 0 }" type="password"
+                  placeholder="Повторите пароль" v-model.trim="recoveryPasswordForm.confirmNewPassword"
+                  @blur="v$.confirmNewPassword.$touch()" />
+                <div class="input-errors" v-for="error of v$.confirmNewPassword.$errors" :key="error.$uid">
+                  <div class="error-msg">{{ error.$message === "Value is required" ?
+                    "Пожалуйста, введите новый пароль ещё раз" :
+                    error.$message === "The value must be equal to the other value" ? "Пароли не совпадают" : ""
+                  }}
+                  </div>
                 </div>
               </div>
               <div class="main-login-content__form_submit">
-                <button type="submit" @click.prevent="submitAuthForm">Войти</button>
+                <button type="submit" :disabled="isButtonRecoveryDisabled" @click.prevent="submitRecoveryPassword">
+                  Изменить пароль
+                </button>
+              </div>
+              <div class="main-login-content__form_submitt">
+                <button :disabled="isButtonCancelDisabled" @click.prevent="submitCancelRecoveryPassword">
+                  Отменить изменение пароля
+                </button>
               </div>
             </form>
           </div>
@@ -48,19 +67,21 @@
 </template>
 
 <script lang="js">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
+import { useRoute, useRouter } from "vue-router"
 
-import { required, minLength } from '@vuelidate/validators'
+import { required, minLength, sameAs } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 
-import MainHeader from "../components/MainHeader.vue"
-import { useAuthStore } from "../stores/auth"
+import { useRecoveryStore } from "../stores/recovery"
 
 export default defineComponent({
-  name: "SignInPage",
+  name: "RecoveryPasswordPage",
   setup() {
     const $q = useQuasar()
+    const route = useRoute()
+    const router = useRouter()
 
     const notifyNeed = (needMessage, needType, needPosition, needTimeout) => {
       $q.notify({
@@ -72,53 +93,110 @@ export default defineComponent({
       })
     }
 
-    const authStore = useAuthStore()
+    const recoveryStore = useRecoveryStore()
 
-    const authForm = ref({
-      username: '',
-      password: '',
+    const recoveryPasswordForm = ref({
+      newPassword: "",
+      confirmNewPassword: "",
     })
+    const isButtonRecoveryDisabled = ref(false)
+    const isButtonCancelDisabled = ref(false)
+
+    const alertSuccessRecoveryPassword = ref(false)
 
     const rules = {
-      username: {
-        required
-      },
-      password: {
+      newPassword: {
         required,
         minLength: minLength(8),
       },
+      confirmNewPassword: {
+        required,
+        sameAs: sameAs(computed(() => recoveryPasswordForm.value.newPassword)),
+      }
     }
 
-    const v$ = useVuelidate(rules, authForm)
+    const v$ = useVuelidate(rules, recoveryPasswordForm)
 
-    const submitAuthForm = async () => {
+    const alertClose = async () => {
+      alertSuccessRecoveryPassword.value = false
+      router.push("/sign-in")
+    }
+
+    const submitRecoveryPassword = async () => {
       v$.value.$touch()
       if (v$.value.$invalid) {
         notifyNeed("Не все поля заполнены", "warning", "top", 1000)
       } else {
-        const formData = {
-          username: authForm.value.username,
-          password: authForm.value.password
+        isButtonRecoveryDisabled.value = true
+        $q.loading.show()
+        const formDataComparePassword = {
+          uid: route.params.id,
+          password: recoveryPasswordForm.value.newPassword
         }
-        const resActSignInUser = await authStore.actSignInUser(formData)
-        notifyNeed("Успешная авторизация", "positive", "top-right", 2000)
-        console.log("formData -->", formData)
+        await recoveryStore.actRecoveryPasswordCompare(formDataComparePassword)
+        console.log("recoveryStore.isPasswordsCompare -->", recoveryStore.isPasswordsCompare)
+        if (recoveryStore.isPasswordsCompare === true) {
+          notifyNeed("Новый пароль совпадает с текущим паролем", "warning", "top-right", 2000)
+        } else {
+          const formDataRecoveryPassword = {
+            uid: route.params.id,
+            password: recoveryPasswordForm.value.newPassword
+          }
+          await recoveryStore.actRecoveryPassword(formDataRecoveryPassword)
+          if (recoveryStore.isRecoveryPassword === true) {
+            isButtonRecoveryDisabled.value = false
+            $q.loading.hide()
+            notifyNeed("Успешное изменение пароля", "positive", "top-right", 2000)
+            alertSuccessRecoveryPassword.value = true
+          } else {
+            notifyNeed("Ошибка изменения пароля. Попробуйте позже", "warning", "top-right", 2000)
+          }
+        }
+        isButtonRecoveryDisabled.value = false
+        $q.loading.hide()
       }
     }
-    return {
-      authForm,
-      v$,
-      submitAuthForm
+
+    const submitCancelRecoveryPassword = async () => {
+      isButtonCancelDisabled.value = true
+      $q.loading.show()
+      const formData = {
+        uid: route.params.id
+      }
+      await recoveryStore.actRecoveryPasswordComplete(formData)
+      if (recoveryStore.isRecoveryPasswordComplete === true) {
+        router.push("/sign-in")
+      }
+      isButtonCancelDisabled.value = false
+      $q.loading.hide()
     }
-  },
-  components: {
-    MainHeader
+
+    onMounted(async () => {
+      const formData = {
+        uid: route.params.id
+      }
+      await recoveryStore.actCheckRecoveryPassword(formData)
+      if (recoveryStore.isCheckRecoveryPassword === false) {
+        router.push("/sign-in")
+      }
+    })
+
+    return {
+      recoveryPasswordForm,
+      v$,
+      submitRecoveryPassword,
+      submitCancelRecoveryPassword,
+      isButtonRecoveryDisabled,
+      isButtonCancelDisabled,
+      alertSuccessRecoveryPassword,
+      alertClose
+    }
   }
 })
 </script>
 
 <style lang="scss" scoped>
-.main-signin {
+.main-signup {
   width: 100%;
 }
 
@@ -163,7 +241,7 @@ export default defineComponent({
 .main-login-content__signupl_text {
   font-size: 14px;
   font-weight: 400;
-  color: #44525f;
+  color: #333;
 }
 
 .main-login-content__signupl_link {
@@ -252,9 +330,33 @@ export default defineComponent({
   border-color: #1b5e1fe8;
 }
 
+.main-login-content__form_submitt {
+  margin-top: 20px;
+}
+
+.main-login-content__form_submitt>button {
+  cursor: pointer;
+  width: 100%;
+  height: 48px;
+  padding: 8px 16px;
+  border-radius: 3px;
+  border: none;
+  box-shadow: 0px 2px 3px #9c9c9c;
+  font-size: 20px;
+  background-color: #fff;
+  color: #333;
+}
+
+.main-login-content__form_submitt>button:hover {
+  color: #000;
+  background-color: #bcc2ce1a;
+  border-color: #bcc2ce1a;
+}
+
 @media (max-width: 1024px) {
   .main-login-content {
     width: 517px;
+    // height: 510px;
   }
 
   .main-login-content__title {
@@ -286,10 +388,15 @@ export default defineComponent({
     height: 45px;
     font-size: 17px;
   }
+
+  .main-login-content__form_submitt>button {
+    height: 45px;
+    font-size: 17px;
+  }
 }
 
 @media (max-width: 926px) {
-  .main-signin {
+  .main-signup {
     height: 100vh;
     overflow: auto;
   }
@@ -341,16 +448,14 @@ export default defineComponent({
   .main-login-content__form_submit>button {
     font-size: 14px;
   }
-}
 
-@media (max-width: 480px) {
-  .main-login-content {
-    width: 100%;
+  .main-login-content__form_submitt>button {
+    font-size: 14px;
   }
 }
 
 @media (max-width: 428px) {
-  .main-signin {
+  .main-signup {
     height: auto;
     overflow: none;
   }
@@ -361,11 +466,6 @@ export default defineComponent({
 
   .error-msg {
     font-size: 10px;
-  }
-
-  .main-login-content {
-    padding: 30px 30px 50px 30px;
-    width: 100%;
   }
 }
 
@@ -405,6 +505,11 @@ export default defineComponent({
   }
 
   .main-login-content__form_submit>button {
+    height: 40px;
+    font-size: 12px;
+  }
+
+  .main-login-content__form_submitt>button {
     height: 40px;
     font-size: 12px;
   }
@@ -450,6 +555,15 @@ export default defineComponent({
     height: 35px;
     font-size: 10px;
   }
+
+  .main-login-content__form_submitt {
+    margin-top: 14px;
+  }
+
+  .main-login-content__form_submitt>button {
+    height: 35px;
+    font-size: 10px;
+  }
 }
 
 @media (max-width: 320px) {
@@ -457,13 +571,13 @@ export default defineComponent({
     margin-top: 80px;
   }
 
-  .error-msg {
-    font-size: 8px;
-  }
-
   .main-login-content {
     padding: 20px 20px 30px 20px;
     width: 100%;
+  }
+
+  .error-msg {
+    font-size: 8px;
   }
 
   .main-login-content__title {
@@ -510,6 +624,15 @@ export default defineComponent({
   }
 
   .main-login-content__form_submit>button {
+    height: 30px;
+    font-size: 9px;
+  }
+
+  .main-login-content__form_submitt {
+    margin-top: 10px;
+  }
+
+  .main-login-content__form_submitt>button {
     height: 30px;
     font-size: 9px;
   }

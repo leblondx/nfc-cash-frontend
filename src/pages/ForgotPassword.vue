@@ -1,43 +1,43 @@
 <template>
   <div>
     <MainHeader activePage="sign-in" />
+    <q-dialog v-model="alertForgotPassword">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Восстановление пароля</div>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          На email <b>{{ alertEmailText }}</b> отправлено письмо. Перейдите по ссылке в письме для восстановления пароля.
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="OK" color="green" v-close-popup @click="alertClose" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <div class="main-signin fixed-center">
       <div class="container">
         <div class="main-login">
           <div class="main-login-content">
-            <div class="main-login-content__title">Войти в аккаунт</div>
-            <div class="main-login-content__signupl">
-              <div class="main-login-content__signupl_text">У вас нет аккаунта?</div>
-              <div class="main-login-content__signupl_link">
-                <router-link to="/sign-up">Регистрация</router-link>
-              </div>
-            </div>
-            <form class="main-login-content__form" @submit.prevent="submitAuthForm">
-              <div class="main-login-content__form_input" :class="{ error: v$.username.$errors.length }">
-                <input class="main-login-content__form_input_i" :class="{ 'input-error': v$.username.$errors.length > 0 }"
-                  type="text" placeholder="Логин" v-model.trim="authForm.username" @blur="v$.username.$touch()" />
-                <div class="input-errors" v-for="error of v$.username.$errors" :key="error.$uid">
-                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите логин" : "" }}
+            <div class="main-login-content__title">Забыли пароль</div>
+            <form class="main-login-content__form" @submit.prevent="submitForgotPasswordForm">
+              <div class="main-login-content__form_input" :class="{ error: v$.emailUser.$errors.length }">
+                <input class="main-login-content__form_input_i"
+                  :class="{ 'input-error': v$.emailUser.$errors.length > 0 }" type="text" placeholder="Email"
+                  v-model.trim="forgotPasswordForm.emailUser" @blur="v$.emailUser.$touch()" />
+                <div class="input-errors" v-for="error of v$.emailUser.$errors" :key="error.$uid">
+                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите email" :
+                    error.$message === "Value is not a valid email address" ?
+                      "Значение не является действительным адресом электронной почты" : "" }}
                   </div>
-                </div>
-              </div>
-              <div class="main-login-content__form_input" :class="{ error: v$.password.$errors.length }">
-                <input class="main-login-content__form_input_i" :class="{ 'input-error': v$.password.$errors.length > 0 }"
-                  type="text" placeholder="Пароль" v-model.trim="authForm.password" @blur="v$.password.$touch()" />
-                <div class="input-errors" v-for="error of v$.password.$errors" :key="error.$uid">
-                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите пароль" :
-                    error.$message === "This field should be at least 8 characters long" ?
-                      "Это поле должно содержать не менее 8 символов" : "" }}
-                  </div>
-                </div>
-              </div>
-              <div class="main-login-content__form_forgot">
-                <div class="main-login-content__form_forgot_link">
-                  <router-link to="/forgot-password">Забыли пароль?</router-link>
                 </div>
               </div>
               <div class="main-login-content__form_submit">
-                <button type="submit" @click.prevent="submitAuthForm">Войти</button>
+                <button type="submit" :disabled="isButtonDisabled" @click.prevent="submitForgotPasswordForm">
+                  Восстановить пароль
+                </button>
+              </div>
+              <div class="main-login-content__form_back">
+                <router-link to="/sign-in">Назад</router-link>
               </div>
             </form>
           </div>
@@ -50,17 +50,19 @@
 <script lang="js">
 import { defineComponent, ref } from 'vue'
 import { useQuasar } from 'quasar'
+import { useRouter } from "vue-router"
 
-import { required, minLength } from '@vuelidate/validators'
+import { required, email } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 
 import MainHeader from "../components/MainHeader.vue"
-import { useAuthStore } from "../stores/auth"
+import { useRecoveryStore } from "../stores/recovery"
 
 export default defineComponent({
-  name: "SignInPage",
+  name: "ForgotPasswordPage",
   setup() {
     const $q = useQuasar()
+    const router = useRouter()
 
     const notifyNeed = (needMessage, needType, needPosition, needTimeout) => {
       $q.notify({
@@ -72,43 +74,64 @@ export default defineComponent({
       })
     }
 
-    const authStore = useAuthStore()
+    const recoveryStore = useRecoveryStore()
 
-    const authForm = ref({
-      username: '',
-      password: '',
+    const forgotPasswordForm = ref({
+      emailUser: "",
     })
+    const isButtonDisabled = ref(false)
+
+    const alertForgotPassword = ref(false)
+    const alertEmailText = ref("")
 
     const rules = {
-      username: {
-        required
-      },
-      password: {
+      emailUser: {
         required,
-        minLength: minLength(8),
+        email
       },
     }
 
-    const v$ = useVuelidate(rules, authForm)
+    const v$ = useVuelidate(rules, forgotPasswordForm)
 
-    const submitAuthForm = async () => {
+    const alertClose = async () => {
+      alertForgotPassword.value = false
+      router.push("/sign-in")
+    }
+
+    const submitForgotPasswordForm = async () => {
       v$.value.$touch()
       if (v$.value.$invalid) {
         notifyNeed("Не все поля заполнены", "warning", "top", 1000)
       } else {
+        isButtonDisabled.value = true
+        $q.loading.show()
         const formData = {
-          username: authForm.value.username,
-          password: authForm.value.password
+          email: forgotPasswordForm.value.emailUser
         }
-        const resActSignInUser = await authStore.actSignInUser(formData)
-        notifyNeed("Успешная авторизация", "positive", "top-right", 2000)
         console.log("formData -->", formData)
+        await recoveryStore.actRecoveryPasswordSendMessage(formData)
+        isButtonDisabled.value = false
+        $q.loading.hide()
+        console.log("forgotPasswordForm.value.emailUser -->", forgotPasswordForm.value.emailUser)
+        alertEmailText.value = forgotPasswordForm.value.emailUser
+        alertForgotPassword.value = true
+        if (recoveryStore.isRecoveryPasswordSendMessage === true) {
+          notifyNeed("Успешная отправка письма восстановления на вашу почту", "positive", "top-right", 2000)
+          forgotPasswordForm.value.emailUser = ""
+        } else {
+          notifyNeed("Произошла ошибка отправки письма восстановления на вашу почту. Попробуйте позже", "warning", "top-right", 2000)
+          forgotPasswordForm.value.emailUser = ""
+        }
       }
     }
     return {
-      authForm,
+      forgotPasswordForm,
       v$,
-      submitAuthForm
+      submitForgotPasswordForm,
+      isButtonDisabled,
+      alertForgotPassword,
+      alertEmailText,
+      alertClose
     }
   },
   components: {
@@ -171,9 +194,9 @@ export default defineComponent({
 }
 
 .main-login-content__signupl_link>a {
-  text-decoration: none;
   font-size: 14px;
   color: #1b5e20;
+  text-decoration: none;
 }
 
 .main-login-content__signupl_link>a:hover {
@@ -230,7 +253,7 @@ export default defineComponent({
 }
 
 .main-login-content__form_submit {
-  margin-top: 20px;
+  margin-top: 33px;
 }
 
 .main-login-content__form_submit>button {
@@ -250,6 +273,18 @@ export default defineComponent({
   color: #fff;
   background-color: #1b5e1fe8;
   border-color: #1b5e1fe8;
+}
+
+.main-login-content__form_back {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.main-login-content__form_back>a {
+  font-size: 16px;
+  color: #1b5e20;
+  text-decoration: none;
 }
 
 @media (max-width: 1024px) {
@@ -341,6 +376,10 @@ export default defineComponent({
   .main-login-content__form_submit>button {
     font-size: 14px;
   }
+
+  .main-login-content__form_back>a {
+    font-size: 14px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -366,6 +405,14 @@ export default defineComponent({
   .main-login-content {
     padding: 30px 30px 50px 30px;
     width: 100%;
+  }
+
+  .main-login-content__form_back {
+    margin-top: 15px;
+  }
+
+  .main-login-content__form_back>a {
+    font-size: 14px;
   }
 }
 
@@ -408,6 +455,10 @@ export default defineComponent({
     height: 40px;
     font-size: 12px;
   }
+
+  .main-login-content__form_back>a {
+    font-size: 13px;
+  }
 }
 
 @media (max-width: 375px) {
@@ -449,6 +500,10 @@ export default defineComponent({
   .main-login-content__form_submit>button {
     height: 35px;
     font-size: 10px;
+  }
+
+  .main-login-content__form_back>a {
+    font-size: 11px;
   }
 }
 
@@ -512,6 +567,14 @@ export default defineComponent({
   .main-login-content__form_submit>button {
     height: 30px;
     font-size: 9px;
+  }
+
+  .main-login-content__form_back {
+    margin-top: 13px;
+  }
+
+  .main-login-content__form_back>a {
+    font-size: 10px;
   }
 }
 </style>

@@ -1,6 +1,22 @@
 <template>
   <div>
     <MainHeader activePage="sign-up" />
+    <q-dialog v-model="alertEmailSendMsg">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Подтверждение электронной почты</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          На email <b>{{ alertEmailText }}</b> отправлено письмо. Перейдите по ссылке в письме для подтверждения своего
+          email.
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="OK" color="green" v-close-popup @click="alertClose" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <div class="main-signup fixed-center">
       <div class="container">
         <div class="main-login">
@@ -9,7 +25,7 @@
             <div class="main-login-content__signupl">
               <div class="main-login-content__signupl_text">У вас есть аккаунт?</div>
               <div class="main-login-content__signupl_link">
-                <a href="#">Войти</a>
+                <router-link to="/sign-in">Войти</router-link>
               </div>
             </div>
             <form class="main-login-content__form" @submit.prevent="submitRegisterForm">
@@ -17,7 +33,8 @@
                 <input class="main-login-content__form_input_i" :class="{ 'input-error': v$.username.$errors.length > 0 }"
                   type="text" placeholder="Логин" v-model.trim="registerForm.username" @blur="v$.username.$touch()" />
                 <div class="input-errors" v-for="error of v$.username.$errors" :key="error.$uid">
-                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите логин" : "" }}
+                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите логин" :
+                    "" }}
                   </div>
                 </div>
               </div>
@@ -37,7 +54,8 @@
                   type="password" placeholder="Пароль" v-model.trim="registerForm.password"
                   @blur="v$.password.$touch()" />
                 <div class="input-errors" v-for="error of v$.password.$errors" :key="error.$uid">
-                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите пароль" :
+                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите пароль"
+                    :
                     error.$message === "This field should be at least 8 characters long" ?
                       "Это поле должно содержать не менее 8 символов" : "" }}
                   </div>
@@ -49,14 +67,16 @@
                   placeholder="Повторите пароль" v-model.trim="registerForm.confirmPassword"
                   @blur="v$.confirmPassword.$touch()" />
                 <div class="input-errors" v-for="error of v$.confirmPassword.$errors" :key="error.$uid">
-                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите пароль ещё раз"
-                    :
-                    error.$message === "The value must be equal to the other value" ? "Пароли не совпадают" : "" }}
+                  <div class="error-msg">{{ error.$message === "Value is required" ?
+                    "Пожалуйста, введите пароль ещё раз" :
+                    error.$message === "The value must be equal to the other value" ? "Пароли не совпадают" : ""
+                  }}
                   </div>
                 </div>
               </div>
               <div class="main-login-content__form_submit">
-                <button type="submit" @click.prevent="submitRegisterForm">Создать аккаунт</button>
+                <button type="submit" :disabled="isButtonDisabled" @click.prevent="submitRegisterForm">Создать
+                  аккаунт</button>
               </div>
             </form>
           </div>
@@ -69,6 +89,7 @@
 <script lang="js">
 import { defineComponent, ref, computed } from 'vue'
 import { useQuasar } from 'quasar'
+import { useRouter } from "vue-router"
 
 import { required, minLength, email, sameAs } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
@@ -80,6 +101,7 @@ export default defineComponent({
   name: 'SignUpPage',
   setup() {
     const $q = useQuasar()
+    const router = useRouter()
 
     const notifyNeed = (needMessage, needType, needPosition, needTimeout) => {
       $q.notify({
@@ -99,6 +121,11 @@ export default defineComponent({
       password: '',
       confirmPassword: ''
     })
+    const isButtonDisabled = ref(false)
+    const isPermDefence = ref(false)
+
+    const alertEmailSendMsg = ref(false)
+    const alertEmailText = ref("")
 
     const rules = {
       username: {
@@ -120,26 +147,73 @@ export default defineComponent({
 
     const v$ = useVuelidate(rules, registerForm)
 
+    const checkEmailExist = async (email) => {
+      const formData = {
+        email: email,
+      }
+      const { message, result } = await authStore.actCheckEmailExist(formData)
+      if (result === true) {
+        notifyNeed(message, "warning", "top", 3000)
+        isPermDefence.value = false
+      } else {
+        isPermDefence.value = true
+      }
+    }
+
+    const checkUsernameExist = async (username) => {
+      const formData = {
+        username: username
+      }
+      const { message, result } = await authStore.actCheckUsernameExist(formData)
+      if (result === true) {
+        notifyNeed(message, "warning", "top", 3000)
+        isPermDefence.value = false
+      } else {
+        isPermDefence.value = true
+      }
+    }
+
+    const alertClose = async () => {
+      alertEmailSendMsg.value = false
+      router.push("/sign-in")
+    }
+
     const submitRegisterForm = async () => {
       v$.value.$touch()
       if (v$.value.$invalid) {
         notifyNeed("Не все поля заполнены", "warning", "top", 1000)
       } else {
-        const formData = {
-          username: registerForm.value.username,
-          email: registerForm.value.emailUser,
-          password: registerForm.value.password
+        isButtonDisabled.value = true
+        $q.loading.show()
+        await checkUsernameExist(registerForm.value.username)
+        await checkEmailExist(registerForm.value.emailUser)
+        console.log("isPermDefence.value -->", isPermDefence.value)
+        if (isPermDefence.value === true) {
+          const formData = {
+            username: registerForm.value.username,
+            email: registerForm.value.emailUser,
+            password: registerForm.value.password
+          }
+          $q.loading.hide()
+          alertEmailText.value = registerForm.value.emailUser
+          alertEmailSendMsg.value = true
+          const resActSignUpUser = await authStore.actSignUpUser(formData)
+          console.log("resActSignUpUser -->", resActSignUpUser)
+          // await authStore.actSignUpUser(formData)
+          notifyNeed("Успешная регистрация", "positive", "top-right", 2000)
+          console.log('formData', formData);
         }
-        // const resActSignUpUser = await authStore.actSignUpUser(formData)
-        await authStore.actSignUpUser(formData)
-        notifyNeed("Успешная регистрация", "positive", "top-right", 2000)
-        console.log('formData', formData);
+        isButtonDisabled.value = false
       }
     }
     return {
       registerForm,
       v$,
-      submitRegisterForm
+      submitRegisterForm,
+      isButtonDisabled,
+      alertEmailSendMsg,
+      alertEmailText,
+      alertClose
     }
   },
   components: {
@@ -181,7 +255,7 @@ export default defineComponent({
   margin: 0 0 8px 0;
   font-size: 28px;
   font-weight: 700;
-  color: #2d385e;
+  color: #1b5e20;
   text-align: center;
 }
 
@@ -194,7 +268,7 @@ export default defineComponent({
 .main-login-content__signupl_text {
   font-size: 14px;
   font-weight: 400;
-  color: #44525f;
+  color: #333;
 }
 
 .main-login-content__signupl_link {

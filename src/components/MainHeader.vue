@@ -5,7 +5,7 @@
         {{ title }}
       </q-toolbar-title>
       <q-tabs v-model="tab" shrink>
-        <q-tab name="home" label="Главная" @click="changeTab('Главная')" />
+        <!-- <q-tab name="home" label="Главная" @click="changeTab('Главная')" /> -->
         <q-tab name="sign-up" label="Регистрация" @click="changeTab('Регистрация')" />
         <q-tab name="sign-in" label="Войти" @click="changeTab('Войти')" />
       </q-tabs>

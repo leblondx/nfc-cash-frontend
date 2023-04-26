@@ -16,13 +16,10 @@ export const useAuthStore = defineStore("auth", {
     async actSignUpUser(formData) {
       // регистрация пользователя
       try {
-        console.log("formData in action actRegisterUser -->", formData);
         const response = await axios.post(
           "http://localhost:8080/auth/sign-up",
           formData
         );
-        console.log("response -->", response);
-        console.log("response.status -->", response.status);
         console.log("response.data -->", response.data);
         if (response.data.status === 200) {
           this.isRegister = true;
@@ -31,8 +28,6 @@ export const useAuthStore = defineStore("auth", {
             result: true,
           };
         }
-        // const response = await authService.registration(formData);
-        // console.log("response -->", response);
       } catch (error) {
         console.log("error in actRegisterUser -->", error);
       }
@@ -44,6 +39,40 @@ export const useAuthStore = defineStore("auth", {
         // запрос на авторизацию пользователя
       } catch (error) {
         console.log("error in actAuthorizationUser -->", error);
+      }
+    },
+    async actCheckEmailExist(formData) {
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/auth/check-email-exist",
+          formData
+        );
+        console.log("response.data -->", response.data);
+        if (response.data.status === 200) {
+          return {
+            message: response.data.message,
+            result: response.data.result,
+          };
+        }
+      } catch (error) {
+        console.log("error in actCheckEmailExist -->", error);
+      }
+    },
+    async actCheckUsernameExist(formData) {
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/auth/check-username-exist",
+          formData
+        );
+        console.log("response.data -->", response.data);
+        if (response.data.status === 200) {
+          return {
+            message: response.data.message,
+            result: response.data.result,
+          };
+        }
+      } catch (error) {
+        console.log("error in actCheckUsernameExist -->", error);
       }
     },
   },
