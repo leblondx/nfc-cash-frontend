@@ -122,7 +122,7 @@
     <q-card-actions>
       <div class="main-chat-info__back">
         <div class="main-chat-info__back_btn">
-          <button>
+          <button @click="goBack">
             <q-icon class="main-chat-info__back_icon" name="arrow_back"></q-icon>
             Назад
           </button>
@@ -134,10 +134,19 @@
 
 <script lang="js">
 import { defineComponent } from 'vue'
+import { useRouter } from "vue-router"
+
 export default defineComponent({
   name: "HomeChatInfoComponent",
   setup() {
-    return {}
+    const router = useRouter()
+
+    const goBack = () => {
+      router.push("/home/chats")
+    }
+    return {
+      goBack
+    }
   }
 })
 </script>

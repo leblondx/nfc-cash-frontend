@@ -9,6 +9,7 @@ export const useAuthStore = defineStore("auth", {
     return {
       isAuth: false,
       isRegister: false,
+      tokenUser: "",
     };
   },
   getters: {},
@@ -35,8 +36,16 @@ export const useAuthStore = defineStore("auth", {
     async actSignInUser(formData) {
       // авторизация пользователя
       try {
-        console.log("formData -->", formData);
-        // запрос на авторизацию пользователя
+        const response = await axios.post(
+          "http://localhost:8080/auth/sign-in",
+          formData
+        );
+        console.log("response.data -->", response.data);
+        if (response.data.status === 200) {
+          this.isAuth = true;
+          localStorage.setItem("token", response.data.token);
+          this.tokenUser = response.data.token;
+        }
       } catch (error) {
         console.log("error in actAuthorizationUser -->", error);
       }

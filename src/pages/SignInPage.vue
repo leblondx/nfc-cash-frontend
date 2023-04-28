@@ -23,7 +23,7 @@
               </div>
               <div class="main-login-content__form_input" :class="{ error: v$.password.$errors.length }">
                 <input class="main-login-content__form_input_i" :class="{ 'input-error': v$.password.$errors.length > 0 }"
-                  type="text" placeholder="Пароль" v-model.trim="authForm.password" @blur="v$.password.$touch()" />
+                  type="password" placeholder="Пароль" v-model.trim="authForm.password" @blur="v$.password.$touch()" />
                 <div class="input-errors" v-for="error of v$.password.$errors" :key="error.$uid">
                   <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите пароль" :
                     error.$message === "This field should be at least 8 characters long" ?
@@ -50,6 +50,7 @@
 <script lang="js">
 import { defineComponent, ref } from 'vue'
 import { useQuasar } from 'quasar'
+import { useRouter } from "vue-router"
 
 import { required, minLength } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
@@ -61,6 +62,7 @@ export default defineComponent({
   name: "SignInPage",
   setup() {
     const $q = useQuasar()
+    const router = useRouter()
 
     const notifyNeed = (needMessage, needType, needPosition, needTimeout) => {
       $q.notify({
@@ -100,9 +102,15 @@ export default defineComponent({
           username: authForm.value.username,
           password: authForm.value.password
         }
-        const resActSignInUser = await authStore.actSignInUser(formData)
-        notifyNeed("Успешная авторизация", "positive", "top-right", 2000)
-        console.log("formData -->", formData)
+        await authStore.actSignInUser(formData)
+        if (authStore.isAuth === true) {
+          $q.loading.show()
+          notifyNeed("Успешная авторизация", "positive", "top-right", 2000)
+          setTimeout(() => {
+            $q.loading.hide()
+            router.push("/home")
+          }, 3000)
+        }
       }
     }
     return {
