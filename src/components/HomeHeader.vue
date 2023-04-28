@@ -15,30 +15,33 @@
   <q-header elevated>
     <q-toolbar class="bg-green-10">
       <q-tabs v-model="tab" shrink>
-        <q-tab name="chats" label="Чаты" @click="changeTab('Чаты')" />
-        <q-tab name="users" label="Пользователи" @click="changeTab('Пользователи')" />
-        <q-tab name="sites" label="Сайты" @click="changeTab('Сайты')" />
-        <q-tab name="settings" label="Настройки" @click="changeTab('Настройки')" />
+        <q-tab name="chats" label="Чаты" @click="changeTab" />
+        <q-tab v-if="isAdmin || isSuperAdmin" name="users" label="Пользователи" @click="changeTab" />
+        <q-tab v-if="isAdmin || isSuperAdmin" name="confirm" label="Подтверждение" @click="changeTab" />
+        <q-tab v-if="isAdmin || isSuperAdmin" name="sites" label="Сайты" @click="changeTab" />
+        <q-tab name="settings" label="Настройки" @click="changeTab" />
       </q-tabs>
       <q-space />
       <q-tabs>
         <div class="home-header__links">
-          <a target="_blank" href="#">@support</a>
+          <a target="_blank" href="#">@поддержка</a>
         </div>
         <div>
           <q-btn flat round dense icon="person">
             <q-menu>
               <div class="row no-wrap q-pa-md">
                 <div class="column">
-                  <div class="text-h6 q-mb-md">Role:</div>
-                  <div>Admin</div>
+                  <div class="text-h6 q-mb-md">Роль:</div>
+                  <div style="font-size:13px">{{ userProfile[0].role === 'user' ? 'Пользователь' : userProfile[0].role ===
+                    'admin' ?
+                    'Администратор' : userProfile[0].role === 'super-admin' ? 'Супер администратор' : '' }}</div>
                 </div>
                 <q-separator vertical inset class="q-mx-lg" />
                 <div class="column items-center">
-                  <q-avatar size="52px">
+                  <q-avatar size="42px">
                     <img src="../assets/user-img.png">
                   </q-avatar>
-                  <div class="text-subtitle1 q-mt-md q-mb-xs">John Doe</div>
+                  <div class="text-subtitle1 q-mt-md q-mb-xs" style="font-size: 13px;">{{ userProfile[0].username }}</div>
                   <q-btn color="green" label="Выйти" push size="sm" @click="showConfirmLogoutAccount" />
                 </div>
               </div>
@@ -54,6 +57,9 @@
 import { defineComponent, ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useRouter } from "vue-router"
+import { storeToRefs } from 'pinia'
+
+import { useUserStore } from "../stores/user"
 
 export default defineComponent({
   name: "MainHeaderComponent",
@@ -67,10 +73,29 @@ export default defineComponent({
     const $q = useQuasar()
     const router = useRouter()
 
+    const { userProfile, isAdmin, isSuperAdmin } = storeToRefs(useUserStore())
+    const userStore = useUserStore()
+
     const tab = ref("")
     const confirmLogoutAccount = ref(false)
 
-    const changeTab = (needName) => {
+    if (props.activePage === "chats") {
+      tab.value = "chats"
+    }
+    if (props.activePage === "users") {
+      tab.value = "users"
+    }
+    if (props.activePage === "sites") {
+      tab.value = "sites"
+    }
+    if (props.activePage === "confirm") {
+      tab.value = "confirm"
+    }
+    if (props.activePage === "settings") {
+      tab.value = "settings"
+    }
+
+    const changeTab = () => {
       try {
         if (tab.value === "chats") {
           router.push("/home/chats")
@@ -96,19 +121,8 @@ export default defineComponent({
       }, 3000)
     }
 
-    onMounted(() => {
-      if (props.activePage === "chats") {
-        tab.value = "chats"
-      }
-      if (props.activePage === "users") {
-        tab.value = "users"
-      }
-      if (props.activePage === "sites") {
-        tab.value = "sites"
-      }
-      if (props.activePage === "settings") {
-        tab.value = "settings"
-      }
+    onMounted(async () => {
+      await userStore.actGetUserProfile()
     })
 
     return {
@@ -116,7 +130,10 @@ export default defineComponent({
       changeTab,
       showConfirmLogoutAccount,
       confirmLogoutAccount,
-      logoutAccount
+      logoutAccount,
+      userProfile,
+      isAdmin,
+      isSuperAdmin
     }
   }
 })

@@ -98,18 +98,26 @@ export default defineComponent({
       if (v$.value.$invalid) {
         notifyNeed("Не все поля заполнены", "warning", "top", 1000)
       } else {
-        const formData = {
-          username: authForm.value.username,
-          password: authForm.value.password
+        const formDataCheckConfirmAccount = {
+          username: authForm.value.username
         }
-        await authStore.actSignInUser(formData)
-        if (authStore.isAuth === true) {
-          $q.loading.show()
-          notifyNeed("Успешная авторизация", "positive", "top-right", 2000)
-          setTimeout(() => {
-            $q.loading.hide()
-            router.push("/home")
-          }, 3000)
+        await authStore.actCheckConfirmAccount(formDataCheckConfirmAccount)
+        if (authStore.isConfirmAccount === false) {
+          notifyNeed("Ваш аккаунт ещё не подтверждён администратором.", "warning", "top", 5000)
+        } else {
+          const formDataSignIn = {
+            username: authForm.value.username,
+            password: authForm.value.password
+          }
+          await authStore.actSignInUser(formDataSignIn)
+          if (authStore.isAuth === true) {
+            $q.loading.show()
+            notifyNeed("Успешная авторизация", "positive", "top-right", 2000)
+            setTimeout(() => {
+              $q.loading.hide()
+              router.push("/home")
+            }, 3000)
+          }
         }
       }
     }

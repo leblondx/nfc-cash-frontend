@@ -4,26 +4,12 @@
       <q-tr :props="props">
         <q-td key="name" :props="props">
           <div class="main-users__content_table_row">{{ props.row.name }}</div>
-          <!-- <q-popup-edit v-model="props.row.name" title="Edit the Name" auto-save v-slot="scope">
-                  <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
-                </q-popup-edit> -->
         </q-td>
         <q-td class="main-users__content_table_row" key="role" :props="props">
           <div>{{ props.row.role }}</div>
-          <!-- <q-popup-edit v-model.number="props.row.role" auto-save v-slot="scope">
-                  <q-input type="number" v-model.number="scope.value" dense autofocus @keyup.enter="scope.set" />
-                </q-popup-edit> -->
         </q-td>
         <q-td key="edit" :props="props">
-          <!-- {{ props.row.edit }} -->
           <q-btn round color="green" icon="edit" @click="editUser(props.row.id)" />
-          <!-- <q-popup-edit disable v-model="props.row.edit" auto-save v-slot="scope">
-                  <div class="text-italic text-primary q-mb-xs">
-                    My Custom Title
-                  </div>
-
-                  <q-input type="number" v-model.number="scope.value" dense autofocus @keyup.enter="scope.set" />
-                </q-popup-edit> -->
         </q-td>
       </q-tr>
     </template>

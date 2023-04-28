@@ -43,12 +43,16 @@ const routes = [
         component: () => import("pages/HomeChatsPage.vue"),
       },
       {
+        path: "/home/chats/:id",
+        component: () => import("pages/HomeChatPage.vue"),
+      },
+      {
         path: "/home/users",
         component: () => import("pages/HomeUsersPage.vue"),
       },
       {
-        path: "/home/chats/:id",
-        component: () => import("pages/HomeChatPage.vue"),
+        path: "/home/confirm",
+        component: () => import("pages/HomeConfirmPage.vue"),
       },
     ],
   },

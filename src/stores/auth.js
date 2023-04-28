@@ -2,13 +2,14 @@ import { defineStore } from "pinia";
 
 import axios from "axios";
 
-import authService from "../services/AuthService";
+// import authService from "../services/AuthService";
 
 export const useAuthStore = defineStore("auth", {
   state: () => {
     return {
       isAuth: false,
       isRegister: false,
+      isConfirmAccount: false,
       tokenUser: "",
     };
   },
@@ -82,6 +83,20 @@ export const useAuthStore = defineStore("auth", {
         }
       } catch (error) {
         console.log("error in actCheckUsernameExist -->", error);
+      }
+    },
+    async actCheckConfirmAccount(formData) {
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/auth/check-confirm-account",
+          formData
+        );
+        console.log("response.data -->", response.data);
+        if (response.data.status === 200) {
+          this.isConfirmAccount = response.data.result;
+        }
+      } catch (error) {
+        console.log("error in actCheckConfirmAccount -->", error);
       }
     },
   },
