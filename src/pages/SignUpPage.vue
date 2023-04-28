@@ -187,21 +187,19 @@ export default defineComponent({
         $q.loading.show()
         await checkUsernameExist(registerForm.value.username)
         await checkEmailExist(registerForm.value.emailUser)
-        console.log("isPermDefence.value -->", isPermDefence.value)
         if (isPermDefence.value === true) {
           const formData = {
             username: registerForm.value.username,
             email: registerForm.value.emailUser,
             password: registerForm.value.password
           }
-          $q.loading.hide()
           alertEmailText.value = registerForm.value.emailUser
-          alertEmailSendMsg.value = true
-          const resActSignUpUser = await authStore.actSignUpUser(formData)
-          console.log("resActSignUpUser -->", resActSignUpUser)
-          // await authStore.actSignUpUser(formData)
-          notifyNeed("Успешная регистрация", "positive", "top-right", 2000)
-          console.log('formData', formData);
+          await authStore.actSignUpUser(formData)
+          if (authStore.isRegister === true) {
+            $q.loading.hide()
+            notifyNeed("Успешная регистрация", "positive", "top-right", 2000)
+            alertEmailSendMsg.value = true
+          }
         }
         isButtonDisabled.value = false
       }

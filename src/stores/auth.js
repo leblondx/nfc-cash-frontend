@@ -25,10 +25,6 @@ export const useAuthStore = defineStore("auth", {
         console.log("response.data -->", response.data);
         if (response.data.status === 200) {
           this.isRegister = true;
-          return {
-            message: response.data.message,
-            result: true,
-          };
         }
       } catch (error) {
         console.log("error in actRegisterUser -->", error);
