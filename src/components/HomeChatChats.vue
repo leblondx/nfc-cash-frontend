@@ -3,8 +3,9 @@
     <q-card-section>
       <div class="main-chat-chats">
         <q-virtual-scroll class="main-chat-chats__chat" :items="messages" separator v-slot="{ item, index }">
-          <q-chat-message :key="item.id" :name="item.name" :sent="item.isSent === true ? true : false" :avatar="item.img"
-            :text="[item.message]" sent :stamp="item.stamp" />
+          <q-chat-message class="main-chat-chats__chat_msg" :key="item.id" :name="item.name"
+            :sent="item.isSent === true ? true : false" :avatar="item.img" :text="[item.message]" sent
+            :stamp="item.stamp" />
         </q-virtual-scroll>
       </div>
     </q-card-section>
@@ -123,6 +124,7 @@ export default defineComponent({
 }
 
 .main-chat-chats__chat {
+  padding: 0 10px;
   max-height: 100%;
 }
 
@@ -152,5 +154,132 @@ export default defineComponent({
   height: 2.2em;
   border: 1px solid;
   text-transform: uppercase;
+}
+
+// @media (max-width: 1920px) {
+//   .main-chat-chats {
+//     height: 925px;
+//   }
+// }
+
+@media (max-width: 1600px) {
+  .main-chat-chats {
+    height: 745px;
+  }
+}
+
+@media (max-width: 1536px) {
+  .main-chat-chats {
+    height: 711px;
+  }
+
+  .main-chat-form__input>input {
+    height: 53px;
+    font-size: 12px;
+  }
+
+  .main-chat-chats__chat_msg {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 1366px) {
+  .main-chat-chats {
+    height: 623px;
+  }
+
+  .main-chat-form__input>input {
+    height: 45px;
+    font-size: 11px;
+  }
+
+  .main-chat-form__input>button {
+    width: 40px;
+    height: 40px;
+    top: 2px;
+  }
+
+  .main-chat-chats__chat_msg {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .main-chat-chats {
+    height: 655px;
+  }
+}
+
+@media (max-width: 1194px) {
+  .main-chat-chats {
+    height: 689px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .main-chat-chats {
+    height: 675px;
+  }
+}
+
+@media (max-width: 1080px) {
+  .main-chat-chats {
+    height: 665px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .main-chat-chats {
+    height: 628px;
+  }
+
+  .main-chat-form__input>input {
+    height: 40px;
+    font-size: 10px;
+  }
+
+  .main-chat-form__input>button {
+    top: 0;
+  }
+
+  .main-chat-info__back_icon {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 812px) {
+  .main-chat-chats {
+    height: 624px;
+  }
+}
+
+@media (max-width: 780px) {
+  .main-chat-chats {
+    height: 624px;
+  }
+}
+
+@media (max-width: 568px) {
+  .main-chat-chats {
+    height: 743px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-chat-chats {
+    height: 759px;
+  }
+}
+
+@media (max-width: 428px) {
+  .main-chat-chats {
+    height: 786px;
+  }
+}
+
+@media (max-width: 375px) {
+  .main-chat-chats {
+    height: 706px;
+  }
 }
 </style>

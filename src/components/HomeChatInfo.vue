@@ -57,7 +57,7 @@
     </q-card-section>
     <q-separator />
     <q-card-section>
-      <q-scroll-area style="height: 335px; max-width: 100%">
+      <q-scroll-area class="main-chat-info__ui">
         <div class="main-chat-info__userinfo">
           <div class="main-chat-info__userinfo_title">Пользовательская информация:</div>
           <div class="main-chat-info__userinfo_ui">
@@ -339,6 +339,11 @@ export default defineComponent({
   color: #000;
 }
 
+.main-chat-info__ui {
+  height: 335px;
+  max-width: 100%
+}
+
 .main-chat-info__userinfo_title {
   font-size: 18px;
   text-align: center;
@@ -387,5 +392,382 @@ export default defineComponent({
 
 .main-chat-info__back_btn>button:hover {
   background-color: #cfcfcf;
+}
+
+// @media (max-width: 1920px) {
+//   .main-chat-info__ui {
+//     height: 409px;
+//   }
+
+//   .main-chat-info__back {
+//     margin-top: 0;
+//   }
+// }
+
+@media (max-width: 1600px) {
+  .main-chat-info__ui {
+    height: 229px;
+    max-width: 100%;
+  }
+
+  .main-chat-info__back {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 1536px) {
+  .main-chat-name__title {
+    font-size: 16px;
+  }
+
+  .main-chat-name__text {
+    font-size: 14px;
+  }
+
+  .main-chat-info__date_title {
+    font-size: 13px;
+  }
+
+  .main-chat-info__date_text {
+    font-size: 12px;
+  }
+
+  .main-chat-info__lo_title {
+    font-size: 13px;
+  }
+
+  .main-chat-info__lo_text {
+    font-size: 12px;
+  }
+
+  .main-chat-info__status_title {
+    font-size: 13px;
+  }
+
+  .main-chat-info__status_text {
+    font-size: 10px;
+  }
+
+  .main-chat-info__actions_title {
+    font-size: 16px;
+  }
+
+  .main-chat-info__actions_btns_go>button {
+    height: 37px;
+    font-size: 14px;
+  }
+
+  .main-chat-info__actions_btns_cp_code>button {
+    height: 33px;
+    font-size: 12px;
+  }
+
+  .main-chat-info__actions_btns_cp_pin>button {
+    height: 33px;
+    font-size: 12px;
+  }
+
+  .main-chat-info__actions_btns_reset>button {
+    height: 35px;
+    font-size: 12px;
+  }
+
+  .main-chat-info__initdata_title {
+    font-size: 16px;
+  }
+
+  .main-chat-info__initdata_currency_title {
+    font-size: 13px;
+  }
+
+  .main-chat-info__initdata_currency_text {
+    font-size: 12px;
+  }
+
+  .main-chat-info__userinfo_title {
+    font-size: 16px;
+  }
+
+  .main-chat-info__ui {
+    height: 222px;
+  }
+
+  .main-chat-info__userinfo_ui_title {
+    font-size: 13px;
+  }
+
+  .main-chat-info__userinfo_ui_text {
+    font-size: 12px;
+  }
+
+  .main-chat-info__back_btn>button {
+    height: 53px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 1366px) {
+  .main-chat-info__actions_btns {
+    margin: 5px 0;
+  }
+
+  .main-chat-info__actions_btns_cp {
+    margin-top: 10px;
+  }
+
+  .main-chat-info__actions_btns_reset {
+    margin-top: 10px;
+  }
+
+  .main-chat-info__ui {
+    height: 150px;
+  }
+
+  .main-chat-info__back_btn>button {
+    height: 45px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .main-chat-info__ui {
+    height: 182px;
+  }
+}
+
+@media (max-width: 1194px) {
+  .main-chat-info__ui {
+    height: 216px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .main-chat-info__ui {
+    height: 202px;
+  }
+}
+
+@media (max-width: 1080px) {
+  .main-chat-info__ui {
+    height: 192px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .main-chat-info__ui {
+    height: 185px;
+  }
+
+  .main-chat-name__title {
+    font-size: 14px;
+  }
+
+  .main-chat-name__text {
+    font-size: 12px;
+  }
+
+  .main-chat-info__date_title {
+    font-size: 11px;
+  }
+
+  .main-chat-info__date_text {
+    font-size: 10px;
+  }
+
+  .main-chat-info__status_title {
+    font-size: 11px;
+  }
+
+  .main-chat-info__status_text {
+    font-size: 8px;
+  }
+
+  .main-chat-info__actions_title {
+    font-size: 14px;
+  }
+
+  .main-chat-info__actions_btns_go>button {
+    height: 34px;
+    font-size: 12px;
+  }
+
+  .main-chat-info__actions_btns_cp_code>button {
+    height: 30px;
+    font-size: 10px;
+  }
+
+  .main-chat-info__actions_btns_cp_pin>button {
+    height: 30px;
+    font-size: 10px;
+  }
+
+  .main-chat-info__actions_btns_reset>button {
+    height: 32px;
+    font-size: 10px;
+  }
+
+  .main-chat-info__initdata_title {
+    font-size: 14px;
+  }
+
+  .main-chat-info__initdata_currency_title {
+    font-size: 11px;
+  }
+
+  .main-chat-info__initdata_currency_text {
+    font-size: 10px;
+  }
+
+  .main-chat-info__userinfo_title {
+    font-size: 14px;
+  }
+
+  .main-chat-info__userinfo_ui_title {
+    font-size: 11px;
+  }
+
+  .main-chat-info__userinfo_ui_text {
+    font-size: 10px;
+  }
+
+  .main-chat-info__back_btn>button {
+    height: 40px;
+    font-size: 10px;
+  }
+
+  .main-chat-info__back_icon {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 834px) {
+  .main-chat-info__ui {
+    height: 181px;
+  }
+}
+
+@media (max-width: 568px) {
+  .main-chat-name {
+    padding: 10px 0;
+  }
+
+  .main-chat-name__title {
+    font-size: 12px;
+  }
+
+  .main-chat-name__text {
+    font-size: 10px;
+  }
+
+  .main-chat-info {
+    padding: 10px 0;
+  }
+
+  .main-chat-info__date_title {
+    font-size: 9px;
+  }
+
+  .main-chat-info__date_text {
+    font-size: 8px;
+  }
+
+  .main-chat-info__lo_title {
+    font-size: 9px;
+  }
+
+  .main-chat-info__lo_text {
+    font-size: 8px;
+  }
+
+  .main-chat-info__status_title {
+    font-size: 9px;
+  }
+
+  .main-chat-info__status_text {
+    font-size: 7px;
+  }
+
+  .main-chat-info__actions {
+    padding: 10px 0;
+  }
+
+  .main-chat-info__actions_title {
+    font-size: 12px;
+  }
+
+  .main-chat-info__actions_btns_go>button {
+    height: 28px;
+    font-size: 10px;
+  }
+
+  .main-chat-info__actions_btns_cp_code>button {
+    height: 24px;
+    font-size: 8px;
+  }
+
+  .main-chat-info__actions_btns_cp_pin>button {
+    height: 24px;
+    font-size: 8px;
+  }
+
+  .main-chat-info__actions_btns_reset>button {
+    height: 26px;
+    font-size: 8px;
+  }
+
+  .main-chat-info__initdata {
+    padding: 10px 0;
+  }
+
+  .main-chat-info__initdata_title {
+    font-size: 11px;
+  }
+
+  .main-chat-info__initdata_currency_title {
+    font-size: 9px;
+  }
+
+  .main-chat-info__initdata_currency_text {
+    font-size: 8px;
+  }
+
+  .main-chat-info__userinfo_title {
+    font-size: 11px;
+  }
+
+  .main-chat-info__ui {
+    height: 266px;
+  }
+
+  .main-chat-info__userinfo_ui_title {
+    font-size: 9px;
+  }
+
+  .main-chat-info__userinfo_ui_text {
+    font-size: 8px;
+  }
+
+  .main-chat-info__back_btn>button {
+    height: 40px;
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 375px) {
+  .main-chat-name {
+    padding: 0;
+  }
+
+  .main-chat-info {
+    padding: 0;
+  }
+
+  .main-chat-info__actions {
+    padding: 0;
+  }
+
+  .main-chat-info__initdata {
+    padding: 0;
+  }
 }
 </style>
