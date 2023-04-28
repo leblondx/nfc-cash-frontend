@@ -4,7 +4,6 @@ const routes = [
     component: () => import("layouts/MainLayout.vue"),
     children: [
       { path: "", component: () => import("pages/SignInPage.vue") },
-      // { path: "/home", component: () => import("pages/IndexPage.vue") },
       { path: "/sign-up", component: () => import("pages/SignUpPage.vue") },
       { path: "/sign-in", component: () => import("pages/SignInPage.vue") },
       {
@@ -34,6 +33,22 @@ const routes = [
       {
         path: "/notify/a-verify-email",
         component: () => import("pages/AlreadyVerifyEmail.vue"),
+      },
+      {
+        path: "/home",
+        component: () => import("pages/HomeChatsPage.vue"),
+      },
+      {
+        path: "/home/chats",
+        component: () => import("pages/HomeChatsPage.vue"),
+      },
+      {
+        path: "/home/users",
+        component: () => import("pages/HomeUsersPage.vue"),
+      },
+      {
+        path: "/home/chats/:id",
+        component: () => import("pages/HomeChatPage.vue"),
       },
     ],
   },

@@ -10,6 +10,7 @@ import { useRoute, useRouter } from "vue-router"
 import { useVerifyStore } from "../stores/verify"
 
 export default defineComponent({
+  name: "VerifyEmailPage",
   setup() {
     const route = useRoute()
     const router = useRouter()

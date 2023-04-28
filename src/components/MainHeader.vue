@@ -13,7 +13,7 @@
   </q-header>
 </template>
 
-<script>
+<script lang="js">
 import { defineComponent, ref, onMounted } from 'vue'
 import { useRouter } from "vue-router"
 
