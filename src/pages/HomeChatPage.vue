@@ -1,5 +1,5 @@
 <template>
-  <q-page style="height: 100%">
+  <q-page class="main-chat-page">
     <HomeHeader activePage="chats" />
     <div class="main-chat">
       <q-splitter v-model="splitterModel" :limits="[2, 98]">
@@ -38,6 +38,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.main-chat-page {
+  height: 100%;
+}
+
 .main-chat {
   width: 100%;
   height: 100%;
