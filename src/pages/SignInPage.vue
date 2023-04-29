@@ -99,11 +99,12 @@ export default defineComponent({
         notifyNeed("Не все поля заполнены", "warning", "top", 1000)
       } else {
         const formDataCheckConfirmAccount = {
-          username: authForm.value.username
+          username: authForm.value.username,
+          password: authForm.value.password
         }
         await authStore.actCheckConfirmAccount(formDataCheckConfirmAccount)
         if (authStore.isConfirmAccount === false) {
-          notifyNeed("Ваш аккаунт ещё не подтверждён администратором.", "warning", "top", 5000)
+          notifyNeed("Ваш аккаунт ещё не подтверждён администратором. В случае подтверждения администратором вашего аккаунта вам поступит сообщение на электронную почту", "warning", "top", 5000)
         } else {
           const formDataSignIn = {
             username: authForm.value.username,

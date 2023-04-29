@@ -38,6 +38,15 @@
                   </div>
                 </div>
               </div>
+              <div class="main-login-content__form_input" :class="{ error: v$.teleId.$errors.length }">
+                <input class="main-login-content__form_input_i" :class="{ 'input-error': v$.teleId.$errors.length > 0 }"
+                  type="text" placeholder="Telegram Id" v-model.trim="registerForm.teleId" @blur="v$.teleId.$touch()" />
+                <div class="input-errors" v-for="error of v$.teleId.$errors" :key="error.$uid">
+                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите телеграмм id" :
+                    "" }}
+                  </div>
+                </div>
+              </div>
               <div class="main-login-content__form_input" :class="{ error: v$.emailUser.$errors.length }">
                 <input class="main-login-content__form_input_i"
                   :class="{ 'input-error': v$.emailUser.$errors.length > 0 }" type="text" placeholder="Email"
@@ -117,6 +126,7 @@ export default defineComponent({
 
     const registerForm = ref({
       username: '',
+      teleId: "",
       emailUser: '',
       password: '',
       confirmPassword: ''
@@ -129,6 +139,9 @@ export default defineComponent({
 
     const rules = {
       username: {
+        required
+      },
+      teleId: {
         required
       },
       emailUser: {
@@ -190,6 +203,7 @@ export default defineComponent({
         if (isPermDefence.value === true) {
           const formData = {
             username: registerForm.value.username,
+            tele_id: Number(registerForm.value.teleId),
             email: registerForm.value.emailUser,
             password: registerForm.value.password
           }

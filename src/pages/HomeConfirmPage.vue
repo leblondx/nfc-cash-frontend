@@ -28,6 +28,7 @@ export default defineComponent({
   name: "HomeConfirmPage",
   setup() {
     const $q = useQuasar()
+
     const { isEmptyUsersUnConfirm } = storeToRefs(useAdminStore())
     const adminStore = useAdminStore()
 

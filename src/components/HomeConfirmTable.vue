@@ -34,6 +34,7 @@
 
 <script lang="js">
 import { defineComponent, ref } from 'vue'
+import { useQuasar } from 'quasar'
 import { storeToRefs } from 'pinia'
 
 import { useAdminStore } from "../stores/admin"
@@ -47,6 +48,8 @@ const columns = [
 export default defineComponent({
   name: "HomeConfirmTableComponent",
   setup() {
+    const $q = useQuasar()
+
     const { usersUnConfirm } = storeToRefs(useAdminStore())
     const adminStore = useAdminStore()
 
@@ -63,11 +66,13 @@ export default defineComponent({
     }
 
     const confirmUser = async () => {
+      $q.loading.show()
       isConfirmUser.value = false
       const formData = {
         id: confirmUserData.value.id
       }
       await adminStore.actUserConfirmAccount(formData)
+      $q.loading.hide()
     }
 
     return {

@@ -29,18 +29,54 @@
         <div class="main-chat-info__actions_title">Действия</div>
         <div class="main-chat-info__actions_btns">
           <div class="main-chat-info__actions_btns_go">
-            <button>Начать</button>
+            <button>
+              Начать
+              <q-tooltip>
+                Взять заказ
+              </q-tooltip>
+            </button>
           </div>
           <div class="main-chat-info__actions_btns_cp">
             <div class="main-chat-info__actions_btns_cp_code">
-              <button>Получить код</button>
+              <button>
+                Получить код
+                <q-tooltip>
+                  Введите код для подтверждения операции
+                </q-tooltip>
+              </button>
             </div>
             <div class="main-chat-info__actions_btns_cp_pin">
-              <button>Получить пин</button>
+              <button>
+                Получить пин
+                <q-tooltip>
+                  Введите пин для подтверждения операции
+                </q-tooltip>
+              </button>
+            </div>
+            <div class="main-chat-info__actions_btns_cp_pin">
+              <button style="background-color: #ff0000;">
+                Отклонить карту
+                <q-tooltip>
+                  Отклонить карту пользователя (попробуйте еще одну(-и))
+                </q-tooltip>
+              </button>
+            </div>
+            <div class="main-chat-info__actions_btns_cp_pin">
+              <button style="background-color: #ff0000">
+                Заблокировать IP
+                <q-tooltip>
+                  Заблокировать IP адрес пользователя
+                </q-tooltip>
+              </button>
             </div>
           </div>
           <div class="main-chat-info__actions_btns_reset">
-            <button>Сбросить</button>
+            <button>
+              Сбросить
+              <q-tooltip>
+                Сбросить пользовательскую форму с ошибкой
+              </q-tooltip>
+            </button>
           </div>
         </div>
       </div>
@@ -256,9 +292,9 @@ export default defineComponent({
 }
 
 .main-chat-info__actions_btns_cp {
-  // display: flex;
-  // align-items: center;
-  // justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-top: 13px;
 }
 
@@ -278,10 +314,6 @@ export default defineComponent({
 
 .main-chat-info__actions_btns_cp_code>button:hover {
   background-color: #1976d2d4;
-}
-
-.main-chat-info__actions_btns_cp_pin {
-  margin-top: 10px;
 }
 
 .main-chat-info__actions_btns_cp_pin>button {
@@ -349,7 +381,7 @@ export default defineComponent({
 }
 
 .main-chat-info__ui {
-  height: 335px;
+  height: 379px;
   max-width: 100%
 }
 
@@ -415,7 +447,7 @@ export default defineComponent({
 
 @media (max-width: 1600px) {
   .main-chat-info__ui {
-    height: 229px;
+    height: 274px;
     max-width: 100%;
   }
 
@@ -498,7 +530,7 @@ export default defineComponent({
   }
 
   .main-chat-info__ui {
-    height: 222px;
+    height: 379px;
   }
 
   .main-chat-info__userinfo_ui_title {
@@ -512,6 +544,18 @@ export default defineComponent({
   .main-chat-info__back_btn>button {
     height: 53px;
     font-size: 12px;
+  }
+}
+
+@media (height: 864px) {
+  .main-chat-info__ui {
+    height: 265px;
+  }
+}
+
+@media (max-width: 1440px) {
+  .main-chat-info__ui {
+    height: 301px;
   }
 }
 
@@ -529,42 +573,64 @@ export default defineComponent({
   }
 
   .main-chat-info__ui {
-    height: 150px;
+    height: 88px;
   }
 
   .main-chat-info__back_btn>button {
     height: 45px;
     font-size: 11px;
   }
+
+  .main-chat-info__actions_btns_cp {
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+
+  .main-chat-info__actions_btns_cp_code {
+    width: 100%;
+  }
+
+  .main-chat-info__actions_btns_cp_pin {
+    margin-top: 6px;
+    width: 100%;
+  }
+
+  .main-chat-info__actions_btns_reset {
+    margin-top: 6px;
+  }
+
+  .main-chat-info__initdata_currency {
+    margin-top: 6px;
+  }
 }
 
 @media (max-width: 1280px) {
   .main-chat-info__ui {
-    height: 182px;
+    height: 120px;
   }
 }
 
 @media (max-width: 1194px) {
   .main-chat-info__ui {
-    height: 216px;
+    height: 154px;
   }
 }
 
 @media (max-width: 1180px) {
   .main-chat-info__ui {
-    height: 202px;
+    height: 140px;
   }
 }
 
 @media (max-width: 1080px) {
   .main-chat-info__ui {
-    height: 192px;
+    height: 130px;
   }
 }
 
 @media (max-width: 1024px) {
   .main-chat-info__ui {
-    height: 185px;
+    height: 117px;
   }
 
   .main-chat-name__title {
@@ -615,6 +681,19 @@ export default defineComponent({
     font-size: 10px;
   }
 
+  .main-chat-info__actions_btns_cp {
+    flex-wrap: wrap;
+  }
+
+  .main-chat-info__actions_btns_cp_code {
+    width: 100%;
+  }
+
+  .main-chat-info__actions_btns_cp_pin {
+    margin-top: 10px;
+    width: 100%;
+  }
+
   .main-chat-info__initdata_title {
     font-size: 14px;
   }
@@ -651,7 +730,20 @@ export default defineComponent({
 
 @media (max-width: 834px) {
   .main-chat-info__ui {
-    height: 181px;
+    height: 114px;
+  }
+
+  .main-chat-info__actions_btns_cp {
+    flex-wrap: wrap;
+  }
+
+  .main-chat-info__actions_btns_cp_code {
+    width: 100%;
+  }
+
+  .main-chat-info__actions_btns_cp_pin {
+    margin-top: 10px;
+    width: 100%;
   }
 }
 
@@ -745,7 +837,7 @@ export default defineComponent({
   }
 
   .main-chat-info__ui {
-    height: 266px;
+    height: 208px;
   }
 
   .main-chat-info__userinfo_ui_title {
@@ -777,6 +869,28 @@ export default defineComponent({
 
   .main-chat-info__initdata {
     padding: 0;
+  }
+}
+
+@media (max-width: 320px) {
+  .main-chat-info__ui {
+    height: 207px;
+  }
+
+  .main-chat-info__actions_btns_go>button {
+    font-size: 8px;
+  }
+
+  .main-chat-info__actions_btns_cp_code>button {
+    font-size: 7px;
+  }
+
+  .main-chat-info__actions_btns_cp_pin>button {
+    font-size: 7px;
+  }
+
+  .main-chat-info__actions_btns_reset>button {
+    font-size: 7px;
   }
 }
 </style>

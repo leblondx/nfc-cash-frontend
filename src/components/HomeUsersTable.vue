@@ -7,7 +7,14 @@
           <div class="main-users__content_table_row">{{ props.row.username }}</div>
         </q-td>
         <q-td class="main-users__content_table_row" key="email" :props="props">
+          <div>{{ props.row.tele_id }}</div>
+        </q-td>
+        <q-td class="main-users__content_table_row" key="email" :props="props">
           <div>{{ props.row.email }}</div>
+        </q-td>
+        <q-td class="main-users__content_table_row" key="role" :props="props">
+          <div>{{ props.row.role === 'user' ? 'пользователь' : props.row.role === 'admin' ? 'администратор' :
+            props.row.role === 'super-admin' ? 'супер администратор' : '' }}</div>
         </q-td>
         <q-td key="edit" :props="props">
           <q-btn round color="green" icon="edit" @click="editUser(props.row.id)" />
@@ -25,7 +32,9 @@ import { useAdminStore } from "../stores/admin"
 
 const columns = [
   { name: 'username', align: 'left', label: 'Имя', field: 'username' },
-  { name: 'email', align: 'left', label: 'Почта', field: 'email' },
+  { name: 'tele_id', align: 'center', label: 'Telegram Id', field: 'tele_id' },
+  { name: 'email', align: 'center', label: 'Почта', field: 'email' },
+  { name: 'role', align: 'center', label: 'Роль', field: 'role' },
   { name: 'edit', label: 'Редактировать', field: 'edit' },
 ]
 

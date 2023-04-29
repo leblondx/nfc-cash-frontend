@@ -183,6 +183,12 @@ export default defineComponent({
   }
 }
 
+@media (max-width: 1440px) {
+  .main-chat-chats {
+    height: 747px;
+  }
+}
+
 @media (max-width: 1366px) {
   .main-chat-chats {
     height: 623px;
