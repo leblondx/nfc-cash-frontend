@@ -3,10 +3,10 @@
     <HomeHeader activePage="confirm" />
     <div class="main-confirm q-pa-lg">
       <div class="main-confirm__title">Подтверждение</div>
-      <div class="main-confirm__content">
+      <div v-if="isEmptyUsersUnConfirm === true" class="main-confirm__content">
         <HomeConfirmTable />
       </div>
-      <div v-if="isEmpty">
+      <div v-if="isEmptyUsersUnConfirm === false">
         <HomeConfirmEmpty />
       </div>
     </div>
@@ -14,24 +14,36 @@
 </template>
 
 <script lang="js">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, onMounted } from 'vue'
+import { useQuasar } from 'quasar'
+import { storeToRefs } from 'pinia'
 
 import HomeHeader from "../components/HomeHeader.vue"
 import HomeConfirmTable from "../components/HomeConfirmTable.vue"
 import HomeConfirmEmpty from "../components/HomeConfirmEmpty.vue"
 
+import { useAdminStore } from "../stores/admin"
+
 export default defineComponent({
   name: "HomeConfirmPage",
   setup() {
-    const isEmpty = ref(false)
+    const $q = useQuasar()
+    const { isEmptyUsersUnConfirm } = storeToRefs(useAdminStore())
+    const adminStore = useAdminStore()
+
+    onMounted(async () => {
+      $q.loading.show()
+      await adminStore.actGetUsersUnConfirm()
+      $q.loading.hide()
+    })
     return {
-      isEmpty,
+      isEmptyUsersUnConfirm,
     }
   },
   components: {
     HomeHeader,
     HomeConfirmTable,
-    HomeConfirmEmpty
+    HomeConfirmEmpty,
   }
 })
 </script>

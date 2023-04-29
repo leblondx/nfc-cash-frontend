@@ -7,6 +7,8 @@ import {
 } from "vue-router";
 import routes from "./routes";
 
+import userService from "../services/UserService";
+
 export default route(function () {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
@@ -41,6 +43,12 @@ export default route(function () {
       "/notify/a-verify-email",
       "/notify/a-verify-email/",
     ];
+    const pathIsAdmin = [
+      "/home/users",
+      "/home/users/",
+      "/home/confirm",
+      "/home/confirm/",
+    ];
     if (
       pathUnAuth.includes(to.path) === true ||
       to.path === `/recovery/recovery-password/${to.params.id}` ||
@@ -52,8 +60,22 @@ export default route(function () {
       }
     } else {
       const tokenUser = localStorage.getItem("token");
-      if (tokenUser === null) {
-        Router.push("/");
+      if (pathIsAdmin.includes(to.path) === true) {
+        if (tokenUser === null) {
+          Router.push("/");
+        } else {
+          const response = await userService.checkIsAdmin();
+          console.log("response.data -->", response.data);
+          if (response.data.status === 200) {
+            if (response.data.result === false) {
+              Router.push("/home/chats");
+            }
+          }
+        }
+      } else {
+        if (tokenUser === null) {
+          Router.push("/");
+        }
       }
       // Нужно будет сделать проверку потом на запрос для проверки валидности токена
       // console.log("tokenUser -->", tokenUser);

@@ -14,18 +14,18 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
-  <q-table class="main-confirm__content_table" :rows="rows" :columns="columns" :rows-per-page-options="[10]"
-    row-key="name">
+  <q-table class="main-confirm__content_table" :rows="usersUnConfirm" :columns="columns" :rows-per-page-options="[10]"
+    row-key="username">
     <template v-slot:body="props">
       <q-tr :props="props">
-        <q-td key="name" :props="props">
-          <div class="main-confirm__content_table_row">{{ props.row.name }}</div>
+        <q-td key="username" :props="props">
+          <div class="main-confirm__content_table_row">{{ props.row.username }}</div>
         </q-td>
-        <q-td class="main-confirm__content_table_row" key="role" :props="props">
-          <div>{{ props.row.role }}</div>
+        <q-td class="main-confirm__content_table_row" key="email" :props="props">
+          <div>{{ props.row.email }}</div>
         </q-td>
         <q-td key="edit" :props="props">
-          <q-btn round color="green" icon="check" @click="confirmUserDialog(props.row.id, props.row.name)" />
+          <q-btn round color="green" icon="check" @click="confirmUserDialog(props.row.id, props.row.username)" />
         </q-td>
       </q-tr>
     </template>
@@ -34,78 +34,25 @@
 
 <script lang="js">
 import { defineComponent, ref } from 'vue'
+import { storeToRefs } from 'pinia'
+
+import { useAdminStore } from "../stores/admin"
 
 const columns = [
-  { name: 'name', align: 'left', label: 'Имя', field: 'name' },
+  { name: 'username', align: 'left', label: 'Имя', field: 'username' },
+  { name: 'email', align: 'left', label: 'Почта', field: 'email' },
   { name: 'edit', label: 'Подтверждение', field: 'confirm' },
-]
-
-const rows = [
-  {
-    id: 1,
-    name: 'Пользователь 1',
-    confirm: "edit",
-  },
-  {
-    id: 2,
-    name: 'Ice cream sandwich',
-    confirm: "edit2",
-  },
-  {
-    id: 3,
-    name: 'Eclair',
-    confirm: "edit3",
-  },
-  {
-    id: 4,
-    name: 'Cupcake',
-    confirm: "edit4",
-  },
-  {
-    id: 5,
-    name: 'Eclair',
-    confirm: "edit3",
-  },
-  {
-    id: 6,
-    name: 'Cupcake',
-    confirm: "edit4",
-  },
-  {
-    id: 7,
-    name: 'Eclair',
-    confirm: "edit3",
-  },
-  {
-    id: 8,
-    name: 'Cupcake',
-    confirm: "edit4",
-  },
-  {
-    id: 9,
-    name: 'Eclair',
-    confirm: "edit3",
-  },
-  {
-    id: 10,
-    name: 'Cupcake1',
-    confirm: "edit4",
-  },
-  {
-    id: 11,
-    name: 'Eclair2',
-    confirm: "edit3",
-  },
-  {
-    id: 12,
-    name: 'Cupcake3',
-    confirm: "edit4",
-  },
 ]
 
 export default defineComponent({
   name: "HomeConfirmTableComponent",
   setup() {
+    const { usersUnConfirm } = storeToRefs(useAdminStore())
+
+    const adminStore = useAdminStore()
+
+    console.log("usersUnConfirm -->", usersUnConfirm)
+
     const isConfirmUser = ref(false)
     const confirmUserData = ref({
       id: 0,
@@ -118,14 +65,17 @@ export default defineComponent({
       isConfirmUser.value = true
     }
 
-    const confirmUser = () => {
+    const confirmUser = async () => {
       isConfirmUser.value = false
-      console.log("confirmUserData -->", confirmUserData.value)
+      const formData = {
+        id: confirmUserData.value.id
+      }
+      await adminStore.actUserConfirmAccount(formData)
     }
 
     return {
+      usersUnConfirm,
       columns,
-      rows,
       confirmUserDialog,
       isConfirmUser,
       confirmUserData,
