@@ -3,10 +3,10 @@
     <HomeHeader activePage="users" />
     <div class="main-users q-pa-lg">
       <div class="main-users__title">Пользователи</div>
-      <div v-if="isEmptyUsers === true" class="main-users__content">
+      <div v-if="isEmptyUsersConfirm === true" class="main-users__content">
         <HomeUsersTable />
       </div>
-      <div v-if="isEmptyUsers === false">
+      <div v-if="isEmptyUsersConfirm === false">
         <HomeUsersEmpty />
       </div>
     </div>
@@ -17,7 +17,7 @@
 </template>
 
 <script lang="js">
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { storeToRefs } from 'pinia'
 
@@ -31,11 +31,17 @@ import { useAdminStore } from "../stores/admin"
 export default defineComponent({
   setup() {
     const $q = useQuasar()
-    const { isEmptyUsers } = storeToRefs(useAdminStore())
+    const { isEmptyUsersConfirm } = storeToRefs(useAdminStore())
     const adminStore = useAdminStore()
 
+    onMounted(async () => {
+      $q.loading.show()
+      await adminStore.actGetUsersConfirm()
+      $q.loading.hide()
+    })
+
     return {
-      isEmptyUsers,
+      isEmptyUsersConfirm,
     }
   },
   components: {

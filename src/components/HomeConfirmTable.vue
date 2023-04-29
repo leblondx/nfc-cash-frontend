@@ -48,10 +48,7 @@ export default defineComponent({
   name: "HomeConfirmTableComponent",
   setup() {
     const { usersUnConfirm } = storeToRefs(useAdminStore())
-
     const adminStore = useAdminStore()
-
-    console.log("usersUnConfirm -->", usersUnConfirm)
 
     const isConfirmUser = ref(false)
     const confirmUserData = ref({

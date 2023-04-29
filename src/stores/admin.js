@@ -5,14 +5,28 @@ import adminService from "../services/AdminService";
 export const useAdminStore = defineStore("admin", {
   state: () => {
     return {
-      users: [],
+      usersConfirm: [],
       usersUnConfirm: [],
-      isEmptyUsers: false,
+      isEmptyUsersConfirm: false,
       isEmptyUsersUnConfirm: false,
     };
   },
   getters: {},
   actions: {
+    async actGetUsersConfirm() {
+      try {
+        const response = await adminService.getUsersConfirm();
+        console.log("response.data -->", response.data);
+        if (response.data.status === 200) {
+          this.usersConfirm = response.data.result;
+          if (response.data.result.length > 0) {
+            this.isEmptyUsersConfirm = true;
+          }
+        }
+      } catch (error) {
+        console.log("error in actGetUsersConfirm -->", error);
+      }
+    },
     async actGetUsersUnConfirm() {
       try {
         const response = await adminService.getUsersUnConfirm();

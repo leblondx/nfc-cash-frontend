@@ -36,6 +36,7 @@ export default defineComponent({
       await adminStore.actGetUsersUnConfirm()
       $q.loading.hide()
     })
+
     return {
       isEmptyUsersUnConfirm,
     }
