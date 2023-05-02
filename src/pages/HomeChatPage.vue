@@ -15,16 +15,35 @@
 </template>
 
 <script lang="js">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, onMounted } from 'vue'
+import { useQuasar } from 'quasar'
+import { useRoute } from "vue-router"
 
 import HomeHeader from "../components/HomeHeader.vue"
 import HomeChatInfo from "../components/HomeChatInfo.vue"
 import HomeChatChats from "../components/HomeChatChats.vue"
 
+import { useOrdersStore } from "../stores/orders"
+
 export default defineComponent({
   name: "HomeChatPage",
   setup() {
+    const $q = useQuasar()
+    const route = useRoute()
+
+    const ordersStore = useOrdersStore()
+
     const splitterModel = ref(38)
+
+    onMounted(async () => {
+      $q.loading.show()
+      const formData = {
+        uid_order: route.params.id
+      }
+      await ordersStore.actGetOrder(formData)
+      $q.loading.hide()
+    })
+
     return {
       splitterModel
     }

@@ -1,69 +1,81 @@
 <template>
   <q-page>
     <HomeHeader activePage="chats" />
-    <div class="main-chats q-pa-lg">
+    <div v-if="isEmptyOrders === true" class="main-chats q-pa-lg">
       <div class="main-chats__title">Чаты</div>
       <div class="main-chats__content">
-        <div class="main-chats__content__block" v-for="chat in getData" :key="chat.id">
-          <router-link class="main-chats__content__block_link" :to="'/home/chats/' + chat.id">
+        <div class="main-chats__content__block" v-for="order in getData" :key="order.id">
+          <router-link class="main-chats__content__block_link" :to="'/home/chats/' + order.uid_order">
             <div class="main-chats__content__block_name">
-              <div class="main-chats__content__block_title">{{ chat.name }}</div>
-              <div class="main-chats__content__block_date">{{ chat.date }}</div>
+              <div class="main-chats__content__block_title">{{ order.uid_order }}</div>
+              <div class="main-chats__content__block_date">{{ order.created }}</div>
             </div>
             <div class="main-chats__content__block_lastonline">
-              <div class="main-chats__content__block_lastonline_title">Last online:</div>
-              <div class="main-chats__content__block_lastonline_text">5 day(s) ago</div>
+              <div class="main-chats__content__block_lastonline_title">Последний онлайн:</div>
+              <div class="main-chats__content__block_lastonline_text">5 дней назад</div>
             </div>
             <div class="main-chats__content__block_status">
-              <div class="main-chats__content__block_status_title">Status</div>
+              <div class="main-chats__content__block_status_title">Статус</div>
               <div class="main-chats__content__block_status_text" :class="{
-                'main-chats__content__block_status_textc': chat.status === 'Chat closed',
-                'main-chats__content__block_status_textw': chat.status === 'Waiting for user'
+                'main-chats__content__block_status_textc': order.status === 'Chat closed',
+                'main-chats__content__block_status_textw': order.status === 'Waiting for user'
               }">
-                {{ chat.status }}
+                {{
+                  order.status === "Action required" ? "Необходимо действие" : order.status === "Waiting for user" ?
+                  "Ожидает пользователя" : order.status === "Chat closed" ? "Чат закрыт" : ""
+                }}
               </div>
             </div>
           </router-link>
         </div>
       </div>
-      <div class="main-chats__pagination absolute-bottom">
-        <q-pagination v-model="page" :min="currentPage" :max="Math.ceil(chats.length / totalPages)" direction-links
+      <div v-if="orders.length > 16" class="main-chats__pagination absolute-bottom">
+        <q-pagination v-model="page" :min="currentPage" :max="Math.ceil(orders.length / totalPages)" direction-links
           outline color="green" active-design="unelevated" active-color="green" active-text-color="white" />
       </div>
+    </div>
+    <div v-if="isEmptyOrders === false">
+      <HomeChatsEmpty />
     </div>
   </q-page>
 </template>
 
 <script lang="js">
-import { defineComponent, ref, computed } from 'vue'
+import { defineComponent, ref, computed, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
+import { storeToRefs } from 'pinia'
 
 import HomeHeader from "../components/HomeHeader.vue"
-import { useChatsStore } from "../stores/chats"
+import HomeChatsEmpty from "../components/HomeChatsEmpty.vue"
+
+import { useOrdersStore } from "../stores/orders"
 
 export default defineComponent({
   name: "HomeChatsPage",
   setup() {
     const $q = useQuasar()
 
-    const chatsStore = useChatsStore()
+    const { orders, isEmptyOrders } = storeToRefs(useOrdersStore())
+    const ordersStore = useOrdersStore()
 
-    const chats = ref(chatsStore.getChats)
     const page = ref(1)
     const currentPage = ref(1)
     const totalPages = ref(16)
 
     const getData = computed(() => {
-      const calculateNeed = chats.value.slice((page.value - 1) * totalPages.value, (page.value - 1) * totalPages.value + totalPages.value)
+      const calculateNeed = orders.value.slice((page.value - 1) * totalPages.value, (page.value - 1) * totalPages.value + totalPages.value)
       return calculateNeed
     })
 
-    // $q.loading.show({
-    //   message: 'Пожалуйста подождите...',
-    // })
-    // $q.loading.hide()
+    onMounted(async () => {
+      $q.loading.show()
+      await ordersStore.actGetOrders()
+      $q.loading.hide()
+    })
+
     return {
-      chats,
+      orders,
+      isEmptyOrders,
       getData,
       page,
       currentPage,
@@ -71,7 +83,8 @@ export default defineComponent({
     }
   },
   components: {
-    HomeHeader
+    HomeHeader,
+    HomeChatsEmpty
   }
 })
 </script>

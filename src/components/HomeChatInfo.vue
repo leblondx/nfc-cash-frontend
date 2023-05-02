@@ -1,186 +1,206 @@
 <template>
   <q-card flat bordered>
-    <q-card-section>
-      <div class="main-chat-name">
-        <div class="main-chat-name__title">ID:</div>
-        <div class="main-chat-name__text">9hcpyuib22a</div>
-      </div>
-    </q-card-section>
-    <q-separator />
-    <q-card-section>
-      <div class="main-chat-info">
-        <div class="main-chat-info__date">
-          <div class="main-chat-info__date_title">Дата создания:</div>
-          <div class="main-chat-info__date_text">20:30:56 06.10.21</div>
+    <div v-for="order in orderData" :key="order.id">
+      <q-card-section>
+        <div class="main-chat-name">
+          <div class="main-chat-name__title">ID:</div>
+          <div class="main-chat-name__text">{{ order.uid_order }}</div>
         </div>
-        <div class="main-chat-info__lo">
-          <div class="main-chat-info__lo_title">Последний онлайн:</div>
-          <div class="main-chat-info__lo_text">28 дней назад</div>
-        </div>
-        <div class="main-chat-info__status">
-          <div class="main-chat-info__status_title">Статус:</div>
-          <div class="main-chat-info__status_text">Чат закрыт</div>
-        </div>
-      </div>
-    </q-card-section>
-    <q-separator />
-    <q-card-section>
-      <div class="main-chat-info__actions">
-        <div class="main-chat-info__actions_title">Действия</div>
-        <div class="main-chat-info__actions_btns">
-          <div class="main-chat-info__actions_btns_go">
-            <button>
-              Начать
-              <q-tooltip>
-                Взять заказ
-              </q-tooltip>
-            </button>
+      </q-card-section>
+      <q-separator />
+      <q-card-section>
+        <div class="main-chat-info">
+          <div class="main-chat-info__date">
+            <div class="main-chat-info__date_title">Дата создания:</div>
+            <div class="main-chat-info__date_text">{{ order.created }}</div>
           </div>
-          <div class="main-chat-info__actions_btns_cp">
-            <div class="main-chat-info__actions_btns_cp_code">
+          <div class="main-chat-info__lo">
+            <div class="main-chat-info__lo_title">Последний онлайн:</div>
+            <div class="main-chat-info__lo_text">28 дней назад</div>
+          </div>
+          <div class="main-chat-info__status">
+            <div class="main-chat-info__status_title">Статус:</div>
+            <div class="main-chat-info__status_text" :class="{
+              'main-chat-info__status_textc': order.status === 'Chat closed',
+              'main-chat-info__status_textw': order.status === 'Waiting for user'
+            }">
+              {{
+                order.status === "Action required" ? "Необходимо действие" : order.status === "Waiting for user" ?
+                "Ожидает пользователя" : order.status === "Chat closed" ? "Чат закрыт" : ""
+              }}
+            </div>
+          </div>
+        </div>
+      </q-card-section>
+      <q-separator />
+      <q-card-section>
+        <div class="main-chat-info__actions">
+          <div class="main-chat-info__actions_title">Действия</div>
+          <div class="main-chat-info__actions_btns">
+            <div class="main-chat-info__actions_btns_go">
               <button>
-                Получить код
+                Начать
                 <q-tooltip>
-                  Введите код для подтверждения операции
+                  Взять заказ
                 </q-tooltip>
               </button>
             </div>
-            <div class="main-chat-info__actions_btns_cp_pin">
+            <div class="main-chat-info__actions_btns_cp">
+              <div class="main-chat-info__actions_btns_cp_code">
+                <button>
+                  Получить код
+                  <q-tooltip>
+                    Введите код для подтверждения операции
+                  </q-tooltip>
+                </button>
+              </div>
+              <div class="main-chat-info__actions_btns_cp_pin">
+                <button>
+                  Получить пин
+                  <q-tooltip>
+                    Введите пин для подтверждения операции
+                  </q-tooltip>
+                </button>
+              </div>
+              <div class="main-chat-info__actions_btns_cp_pin">
+                <button style="background-color: #ff0000;">
+                  Отклонить карту
+                  <q-tooltip>
+                    Отклонить карту пользователя (попробуйте еще одну(-и))
+                  </q-tooltip>
+                </button>
+              </div>
+              <div class="main-chat-info__actions_btns_cp_pin">
+                <button style="background-color: #ff0000">
+                  Заблокировать IP
+                  <q-tooltip>
+                    Заблокировать IP адрес пользователя
+                  </q-tooltip>
+                </button>
+              </div>
+            </div>
+            <div class="main-chat-info__actions_btns_reset">
               <button>
-                Получить пин
+                Сбросить
                 <q-tooltip>
-                  Введите пин для подтверждения операции
+                  Сбросить пользовательскую форму с ошибкой
                 </q-tooltip>
               </button>
             </div>
-            <div class="main-chat-info__actions_btns_cp_pin">
-              <button style="background-color: #ff0000;">
-                Отклонить карту
-                <q-tooltip>
-                  Отклонить карту пользователя (попробуйте еще одну(-и))
-                </q-tooltip>
-              </button>
-            </div>
-            <div class="main-chat-info__actions_btns_cp_pin">
-              <button style="background-color: #ff0000">
-                Заблокировать IP
-                <q-tooltip>
-                  Заблокировать IP адрес пользователя
-                </q-tooltip>
-              </button>
-            </div>
-          </div>
-          <div class="main-chat-info__actions_btns_reset">
-            <button>
-              Сбросить
-              <q-tooltip>
-                Сбросить пользовательскую форму с ошибкой
-              </q-tooltip>
-            </button>
           </div>
         </div>
-      </div>
-    </q-card-section>
-    <q-separator />
-    <q-card-section>
-      <div class="main-chat-info__initdata">
-        <div class="main-chat-info__initdata_title">Инициализированные данные:</div>
-        <div class="main-chat-info__initdata_currency">
-          <div class="main-chat-info__initdata_currency_title">Валюта:</div>
-          <div class="main-chat-info__initdata_currency_text">250$</div>
+      </q-card-section>
+      <q-separator />
+      <q-card-section>
+        <div class="main-chat-info__initdata">
+          <div class="main-chat-info__initdata_title">Инициализированные данные:</div>
+          <div class="main-chat-info__initdata_currency">
+            <div class="main-chat-info__initdata_currency_title">Валюта:</div>
+            <div class="main-chat-info__initdata_currency_text">{{ order.price }}$</div>
+          </div>
         </div>
-      </div>
-    </q-card-section>
-    <q-separator />
-    <q-card-section>
-      <q-scroll-area class="main-chat-info__ui">
-        <div class="main-chat-info__userinfo">
-          <div class="main-chat-info__userinfo_title">Пользовательская информация:</div>
-          <div class="main-chat-info__userinfo_ui">
-            <div class="main-chat-info__userinfo_ui_title">UserAgent:</div>
-            <div class="main-chat-info__userinfo_ui_text">
-              Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) Web Mozilla/5.0 (iPhone; CPU iPhone OS
-              14_7_1
-              like Mac OS X) Web
+      </q-card-section>
+      <q-separator />
+      <q-card-section>
+        <q-scroll-area class="main-chat-info__ui">
+          <div class="main-chat-info__userinfo">
+            <div class="main-chat-info__userinfo_title">Пользовательская информация:</div>
+            <div class="main-chat-info__userinfo_ui">
+              <div class="main-chat-info__userinfo_ui_title">UserAgent:</div>
+              <div class="main-chat-info__userinfo_ui_text">
+                {{ order.user_agent }}
+              </div>
             </div>
-          </div>
-          <div class="main-chat-info__userinfo_ui">
-            <div class="main-chat-info__userinfo_ui_title">IP:</div>
-            <div class="main-chat-info__userinfo_ui_text">
-              223.25.64.115
+            <div class="main-chat-info__userinfo_ui">
+              <div class="main-chat-info__userinfo_ui_title">IP:</div>
+              <div class="main-chat-info__userinfo_ui_text">
+                {{ order.ip_address }}
+              </div>
             </div>
-          </div>
-          <div class="main-chat-info__userinfo_ui">
+            <!-- <div class="main-chat-info__userinfo_ui">
             <div class="main-chat-info__userinfo_ui_title">ReverseDNS:</div>
             <div class="main-chat-info__userinfo_ui_text">
               223-25-64-115.myrepublic.com.sg
             </div>
-          </div>
-          <div class="main-chat-info__userinfo_ui">
-            <div class="main-chat-info__userinfo_ui_title">CurrentURL:</div>
-            <div class="main-chat-info__userinfo_ui_text">
-              https://pizzahut.rest443/v
+          </div> -->
+            <div class="main-chat-info__userinfo_ui">
+              <div class="main-chat-info__userinfo_ui_title">CurrentURL:</div>
+              <div class="main-chat-info__userinfo_ui_text">
+                {{ order.current_url }}
+              </div>
             </div>
-          </div>
-          <div class="main-chat-info__userinfo_ui">
+            <!-- <div class="main-chat-info__userinfo_ui">
             <div class="main-chat-info__userinfo_ui_title">RefererURL:</div>
             <div class="main-chat-info__userinfo_ui_text">
               https://pizzahut.rest/order/checkout/
             </div>
-          </div>
-          <div class="main-chat-info__userinfo_ui">
-            <div class="main-chat-info__userinfo_ui_title">Language:</div>
-            <div class="main-chat-info__userinfo_ui_text">
-              EN
+          </div> -->
+            <div class="main-chat-info__userinfo_ui">
+              <div class="main-chat-info__userinfo_ui_title">Language:</div>
+              <div class="main-chat-info__userinfo_ui_text">
+                {{ order.lang }}
+              </div>
             </div>
-          </div>
-          <div class="main-chat-info__userinfo_ui">
-            <div class="main-chat-info__userinfo_ui_title">OS:</div>
-            <div class="main-chat-info__userinfo_ui_text">
-              iPhone
+            <div class="main-chat-info__userinfo_ui">
+              <div class="main-chat-info__userinfo_ui_title">OS:</div>
+              <div class="main-chat-info__userinfo_ui_text">
+                {{ order.operating_system }}
+              </div>
             </div>
-          </div>
-          <div class="main-chat-info__userinfo_ui">
-            <div class="main-chat-info__userinfo_ui_title">Browser:</div>
-            <div class="main-chat-info__userinfo_ui_text">
-              Handheld Browser
+            <div class="main-chat-info__userinfo_ui">
+              <div class="main-chat-info__userinfo_ui_title">Browser:</div>
+              <div class="main-chat-info__userinfo_ui_text">
+                {{ order.browser }}
+              </div>
             </div>
-          </div>
-          <div class="main-chat-info__userinfo_ui">
+            <!-- <div class="main-chat-info__userinfo_ui">
             <div class="main-chat-info__userinfo_ui_title">affId:</div>
             <div class="main-chat-info__userinfo_ui_text">
             </div>
+          </div> -->
+          </div>
+        </q-scroll-area>
+      </q-card-section>
+      <q-separator />
+      <q-card-actions>
+        <div class="main-chat-info__back">
+          <div class="main-chat-info__back_btn">
+            <button @click="goBack">
+              <q-icon class="main-chat-info__back_icon" name="arrow_back"></q-icon>
+              Назад
+            </button>
           </div>
         </div>
-      </q-scroll-area>
-    </q-card-section>
-    <q-separator />
-    <q-card-actions>
-      <div class="main-chat-info__back">
-        <div class="main-chat-info__back_btn">
-          <button @click="goBack">
-            <q-icon class="main-chat-info__back_icon" name="arrow_back"></q-icon>
-            Назад
-          </button>
-        </div>
-      </div>
-    </q-card-actions>
+      </q-card-actions>
+    </div>
   </q-card>
 </template>
 
 <script lang="js">
-import { defineComponent } from 'vue'
-import { useRouter } from "vue-router"
+import { defineComponent, computed } from 'vue'
+import { useRoute, useRouter } from "vue-router"
+import { storeToRefs } from 'pinia'
+
+import { useOrdersStore } from "../stores/orders"
 
 export default defineComponent({
   name: "HomeChatInfoComponent",
   setup() {
     const router = useRouter()
+    const route = useRoute()
+
+    const { order } = storeToRefs(useOrdersStore())
+    const ordersStore = useOrdersStore()
 
     const goBack = () => {
       router.push("/home/chats")
     }
+
+    const orderData = computed(() => order.value)
+
     return {
+      order,
+      orderData,
       goBack
     }
   }

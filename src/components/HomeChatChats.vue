@@ -1,117 +1,67 @@
 <template>
   <q-card flat>
-    <q-card-section>
-      <div class="main-chat-chats">
-        <q-virtual-scroll class="main-chat-chats__chat" :items="messages" separator v-slot="{ item, index }">
-          <q-chat-message class="main-chat-chats__chat_msg" :key="item.id" :name="item.name"
-            :sent="item.isSent === true ? true : false" :avatar="item.img" :text="[item.message]" sent
-            :stamp="item.stamp" />
-        </q-virtual-scroll>
-      </div>
-    </q-card-section>
-    <q-separator />
-    <q-card-actions>
-      <form class="main-chat-form">
-        <div class="main-chat-form__input">
-          <input type="text" placeholder="Сообщение">
-          <q-btn round color="green" icon="send" />
+    <div v-if="isEmptyMessages === true">
+      <q-card-section>
+        <div class="main-chat-chats">
+          <q-virtual-scroll class="main-chat-chats__chat" :items="messages" separator v-slot="{ item, index }">
+            <q-chat-message class="main-chat-chats__chat_msg" :key="item.id"
+              :name="item.uid_user.length === 8 ? 'я' : 'пользователь'" :sent="item.uid_user.length === 8 ? true : false"
+              :text="[item.message]" sent :stamp="item.created" />
+          </q-virtual-scroll>
         </div>
-      </form>
-    </q-card-actions>
+      </q-card-section>
+      <q-separator />
+      <q-card-actions>
+        <form class="main-chat-form">
+          <div class="main-chat-form__input">
+            <input type="text" placeholder="Сообщение">
+            <q-btn round color="green" icon="send" />
+          </div>
+        </form>
+      </q-card-actions>
+    </div>
+    <div v-if="isEmptyMessages === false">
+      <HomeChatChatsEmpty />
+    </div>
   </q-card>
 </template>
 
 <script lang="js">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, onMounted } from 'vue'
+import { useQuasar } from 'quasar'
+import { useRoute } from "vue-router"
+import { storeToRefs } from 'pinia'
+
+import { useMessageStore } from "../stores/message"
+
+import HomeChatChatsEmpty from "../components/HomeChatChatsEmpty.vue"
 
 export default defineComponent({
   name: "HomeChatChatsComponent",
   setup() {
-    const messages = ref([
-      {
-        id: 1,
-        name: "я",
-        message: "hey, how are you?",
-        isSent: true,
-        img: "https://cdn.quasar.dev/img/avatar4.jpg",
-        stamp: "7 minutes ago",
-      },
-      {
-        id: 2,
-        name: "John Johnson",
-        message: "doing fine, how r you?",
-        isSent: false,
-        img: "https://cdn.quasar.dev/img/avatar3.jpg",
-        stamp: "4 minutes ago",
-      },
-      {
-        id: 3,
-        name: "я",
-        message: "???",
-        isSent: true,
-        img: "https://cdn.quasar.dev/img/avatar4.jpg",
-        stamp: "7 minutes ago",
-      },
-      {
-        id: 4,
-        name: "я",
-        message: "wtf???",
-        isSent: true,
-        img: "https://cdn.quasar.dev/img/avatar4.jpg",
-        stamp: "6 minutes ago",
-      },
-      {
-        id: 5,
-        name: "John Johnson",
-        message: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.",
-        isSent: false,
-        img: "https://cdn.quasar.dev/img/avatar3.jpg",
-        stamp: "3 minutes ago",
-      },
-      {
-        id: 6,
-        name: "John Johnson",
-        message: "And you?",
-        isSent: false,
-        img: "https://cdn.quasar.dev/img/avatar3.jpg",
-        stamp: "3 minutes ago",
-      },
-      {
-        id: 7,
-        name: "я",
-        message: "Good, i'm fine. What are you doing now?",
-        isSent: true,
-        img: "https://cdn.quasar.dev/img/avatar4.jpg",
-        stamp: "2 minutes ago",
-      },
-      {
-        id: 8,
-        name: "John Johnson",
-        message: "Im working now! I will call you after one hour later",
-        isSent: false,
-        img: "https://cdn.quasar.dev/img/avatar3.jpg",
-        stamp: "1 minutes ago",
-      },
-      {
-        id: 9,
-        name: "John Johnson",
-        message: "Ok???",
-        isSent: false,
-        img: "https://cdn.quasar.dev/img/avatar3.jpg",
-        stamp: "1 minutes ago",
-      },
-      {
-        id: 10,
-        name: "я",
-        message: "Ok, i'm understand you",
-        isSent: true,
-        img: "https://cdn.quasar.dev/img/avatar4.jpg",
-        stamp: "now",
-      },
-    ])
+    const $q = useQuasar()
+    const route = useRoute()
+
+    const { messages, isEmptyMessages } = storeToRefs(useMessageStore())
+
+    const messageStore = useMessageStore()
+
+    onMounted(async () => {
+      $q.loading.show()
+      const formData = {
+        uidRoom: route.params.id
+      }
+      await messageStore.actGetRoomMessages(formData)
+      $q.loading.hide()
+    })
+
     return {
-      messages
+      messages,
+      isEmptyMessages
     }
+  },
+  components: {
+    HomeChatChatsEmpty
   }
 })
 </script>
