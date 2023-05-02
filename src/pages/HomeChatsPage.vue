@@ -11,15 +11,19 @@
               <div class="main-chats__content__block_date">{{ order.created }}</div>
             </div>
             <div class="main-chats__content__block_lastonline">
-              <div class="main-chats__content__block_lastonline_title">Последний онлайн:</div>
-              <div class="main-chats__content__block_lastonline_text">5 дней назад</div>
+              <div class="main-chats__content__block_lastonline_title">Закреплённый пользователь:</div>
+              <div class="main-chats__content__block_lastonline_text">
+                {{
+                  order.member_fixed === "" ? "Свободный заказ" : order.member_fixed
+                }}
+              </div>
             </div>
             <div class="main-chats__content__block_status">
               <div class="main-chats__content__block_status_title">Статус</div>
               <div class="main-chats__content__block_status_text" :class="{
-                'main-chats__content__block_status_textc': order.status === 'Chat closed',
-                'main-chats__content__block_status_textw': order.status === 'Waiting for user'
-              }">
+                  'main-chats__content__block_status_textc': order.status === 'Chat closed',
+                  'main-chats__content__block_status_textw': order.status === 'Waiting for user'
+                }">
                 {{
                   order.status === "Action required" ? "Необходимо действие" : order.status === "Waiting for user" ?
                   "Ожидает пользователя" : order.status === "Chat closed" ? "Чат закрыт" : ""
@@ -138,7 +142,7 @@ export default defineComponent({
 }
 
 .main-chats__content__block_title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 800;
   color: #1b5e20;
 }

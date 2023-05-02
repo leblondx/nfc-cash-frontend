@@ -15,15 +15,19 @@
             <div class="main-chat-info__date_text">{{ order.created }}</div>
           </div>
           <div class="main-chat-info__lo">
-            <div class="main-chat-info__lo_title">Последний онлайн:</div>
-            <div class="main-chat-info__lo_text">28 дней назад</div>
+            <div class="main-chat-info__lo_title">Закреплённый пользователь:</div>
+            <div class="main-chat-info__lo_text">
+              {{
+                room[0].member_fixed === "" ? "Свободный заказ" : room[0].member_fixed
+              }}
+            </div>
           </div>
           <div class="main-chat-info__status">
             <div class="main-chat-info__status_title">Статус:</div>
             <div class="main-chat-info__status_text" :class="{
-              'main-chat-info__status_textc': order.status === 'Chat closed',
-              'main-chat-info__status_textw': order.status === 'Waiting for user'
-            }">
+                'main-chat-info__status_textc': order.status === 'Chat closed',
+                'main-chat-info__status_textw': order.status === 'Waiting for user'
+              }">
               {{
                 order.status === "Action required" ? "Необходимо действие" : order.status === "Waiting for user" ?
                 "Ожидает пользователя" : order.status === "Chat closed" ? "Чат закрыт" : ""
@@ -182,6 +186,7 @@ import { useRoute, useRouter } from "vue-router"
 import { storeToRefs } from 'pinia'
 
 import { useOrdersStore } from "../stores/orders"
+import { useRoomStore } from "../stores/room"
 
 export default defineComponent({
   name: "HomeChatInfoComponent",
@@ -190,6 +195,7 @@ export default defineComponent({
     const route = useRoute()
 
     const { order } = storeToRefs(useOrdersStore())
+    const { room } = storeToRefs(useRoomStore())
     const ordersStore = useOrdersStore()
 
     const goBack = () => {
@@ -200,6 +206,7 @@ export default defineComponent({
 
     return {
       order,
+      room,
       orderData,
       goBack
     }

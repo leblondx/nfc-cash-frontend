@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 
 import axios from "axios";
+import { DateTime } from "luxon";
 
 export const useOrdersStore = defineStore("orders", {
   state: () => {
@@ -19,7 +20,11 @@ export const useOrdersStore = defineStore("orders", {
         );
         console.log("response.data -->", response.data);
         if (response.data.status === 200) {
-          this.orders = response.data.result;
+          this.orders = response.data.result.filter((e) => {
+            const date = DateTime.fromISO(e.created);
+            e.created = date.toFormat("dd-MM-yyyy hh:mm");
+            return e;
+          });
           if (response.data.result.length > 0) {
             this.isEmptyOrders = true;
           } else {

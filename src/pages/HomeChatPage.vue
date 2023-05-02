@@ -7,7 +7,7 @@
           <HomeChatInfo />
         </template>
         <template v-slot:after>
-          <HomeChatChats />
+          <HomeChatChats @textSendMessage="sendMessage" />
         </template>
       </q-splitter>
     </div>
@@ -18,12 +18,16 @@
 import { defineComponent, ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useRoute } from "vue-router"
+import { storeToRefs } from 'pinia'
 
 import HomeHeader from "../components/HomeHeader.vue"
 import HomeChatInfo from "../components/HomeChatInfo.vue"
 import HomeChatChats from "../components/HomeChatChats.vue"
 
+import { useUserStore } from "../stores/user"
 import { useOrdersStore } from "../stores/orders"
+import { useRoomStore } from "../stores/room"
+import { useMessageStore } from "../stores/message"
 
 export default defineComponent({
   name: "HomeChatPage",
@@ -31,27 +35,89 @@ export default defineComponent({
     const $q = useQuasar()
     const route = useRoute()
 
+    const { userProfile } = storeToRefs(useUserStore())
+    const { order } = storeToRefs(useOrdersStore())
+    const { room } = storeToRefs(useRoomStore())
+    const userStore = useUserStore()
     const ordersStore = useOrdersStore()
+    const roomStore = useRoomStore()
+    const messageStore = useMessageStore()
 
+    let socket
     const splitterModel = ref(38)
+    const isConnectChat = ref(false)
+
+    const connect = async (userUid) => {
+      socket = new WebSocket(`ws://localhost:8080/room/join-room/${route.params.id}?uidUser=${userUid}`)
+      socket.onopen = () => {
+        console.log("connect to websocket")
+      }
+      socket.onmessage = (e) => {
+        console.log("e.data -->", e.data)
+      }
+      socket.onclose = () => {
+        console.log("Socket закрыт")
+      }
+      socket.onerror = () => {
+        console.log("Socket произошла ошибка")
+      }
+    }
+
+    const connectCheck = async (orderStatus, userUid, roomData) => { // подключение к websocket каналу
+      if (orderStatus !== "Chat closed") {
+        if (roomData.member_count === 2) {
+          if (roomData.members.includes(userUid) === true) {
+            isConnectChat.value = true
+          }
+        } else {
+          if (roomData.members.includes(userUid) === false) {
+            isConnectChat.value = true
+          }
+        }
+      }
+    }
+
+    const sendMessage = async (data) => { // отправка сообщения по сокетам
+      // сохранение в базе данных сообщения
+      const formData = {
+        uidRoom: route.params.id,
+        uidUser: userProfile.value[0].uid,
+        message: data
+      }
+      await messageStore.actCreateMessage(formData)
+      console.log("messageStore.isSendMessage -->", messageStore.isSendMessage)
+      console.log("sendMessage")
+      console.log("data -->", data)
+      console.log("userProfile.value[0].uid -->", userProfile.value[0].uid)
+      socket.send(data)
+    }
 
     onMounted(async () => {
       $q.loading.show()
+      const formDataRoom = {
+        uidRoom: route.params.id
+      }
       const formData = {
         uid_order: route.params.id
       }
+      await roomStore.actGetRoom(formDataRoom)
       await ordersStore.actGetOrder(formData)
+      await connectCheck(order.value[0].status, userProfile.value[0].uid, room.value[0])
+      if (isConnectChat.value === true) {
+        await connect(userProfile.value[0].uid)
+      }
       $q.loading.hide()
     })
 
     return {
-      splitterModel
+      splitterModel,
+      sendMessage
     }
   },
   components: {
     HomeHeader,
     HomeChatInfo,
-    HomeChatChats
+    HomeChatChats,
   }
 })
 </script>

@@ -12,10 +12,10 @@
       </q-card-section>
       <q-separator />
       <q-card-actions>
-        <form class="main-chat-form">
+        <form class="main-chat-form" @submit.prevent="submitSendMessageForm">
           <div class="main-chat-form__input">
-            <input type="text" placeholder="Сообщение">
-            <q-btn round color="green" icon="send" />
+            <input type="text" placeholder="Сообщение" v-model.trim="inputForm">
+            <q-btn round color="green" icon="send" @click="submitSendMessageForm" />
           </div>
         </form>
       </q-card-actions>
@@ -27,7 +27,7 @@
 </template>
 
 <script lang="js">
-import { defineComponent, onMounted } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { useRoute } from "vue-router"
 import { storeToRefs } from 'pinia'
@@ -38,13 +38,23 @@ import HomeChatChatsEmpty from "../components/HomeChatChatsEmpty.vue"
 
 export default defineComponent({
   name: "HomeChatChatsComponent",
-  setup() {
+  emits: ['textSendMessage'],
+  setup(_, context) {
     const $q = useQuasar()
     const route = useRoute()
 
     const { messages, isEmptyMessages } = storeToRefs(useMessageStore())
-
     const messageStore = useMessageStore()
+
+    const inputForm = ref("")
+
+    const submitSendMessageForm = () => {
+      if (inputForm.value.length > 0) {
+        console.log("inputForm.value -->", inputForm.value)
+        context.emit("textSendMessage", inputForm.value)
+        inputForm.value = ""
+      }
+    }
 
     onMounted(async () => {
       $q.loading.show()
@@ -57,7 +67,9 @@ export default defineComponent({
 
     return {
       messages,
-      isEmptyMessages
+      isEmptyMessages,
+      inputForm,
+      submitSendMessageForm
     }
   },
   components: {
