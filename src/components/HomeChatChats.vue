@@ -96,7 +96,6 @@ export default defineComponent({
 
     const submitSendMessageForm = () => {
       if (inputForm.value.length > 0) {
-        console.log("inputForm.value -->", inputForm.value)
         context.emit("textSendMessage", inputForm.value)
         inputForm.value = ""
       }

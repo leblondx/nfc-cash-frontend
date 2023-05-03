@@ -42,51 +42,51 @@
           <div class="main-chat-info__actions_title">Действия</div>
           <div class="main-chat-info__actions_btns">
             <div class="main-chat-info__actions_btns_go">
-              <button>
+              <button :disabled="isBtnStartDisabled" @click="start">
                 Начать
-                <q-tooltip>
-                  Взять заказ
+                <q-tooltip v-if="isBtnStartDisabled === false">
+                  Подключиться к чату
                 </q-tooltip>
               </button>
             </div>
             <div class="main-chat-info__actions_btns_cp">
               <div class="main-chat-info__actions_btns_cp_code">
-                <button>
+                <button :disabled="isBtnsContentDisabled" @click="getCode">
                   Получить код
-                  <q-tooltip>
+                  <q-tooltip v-if="isBtnsContentDisabled === false">
                     Введите код для подтверждения операции
                   </q-tooltip>
                 </button>
               </div>
               <div class="main-chat-info__actions_btns_cp_pin">
-                <button>
+                <button :disabled="isBtnsContentDisabled" @click="getPin">
                   Получить пин
-                  <q-tooltip>
+                  <q-tooltip v-if="isBtnsContentDisabled === false">
                     Введите пин для подтверждения операции
                   </q-tooltip>
                 </button>
               </div>
               <div class="main-chat-info__actions_btns_cp_pin">
-                <button style="background-color: #ff0000;">
+                <button style="background-color: #ff0000;" :disabled="isBtnsContentDisabled" @click="cancelCard">
                   Отклонить карту
-                  <q-tooltip>
+                  <q-tooltip v-if="isBtnsContentDisabled === false">
                     Отклонить карту пользователя (попробуйте еще одну(-и))
                   </q-tooltip>
                 </button>
               </div>
               <div class="main-chat-info__actions_btns_cp_pin">
-                <button style="background-color: #ff0000">
+                <button style="background-color: #ff0000" :disabled="isBtnsContentDisabled" @click="blockIpAddressUser">
                   Заблокировать IP
-                  <q-tooltip>
+                  <q-tooltip v-if="isBtnsContentDisabled === false">
                     Заблокировать IP адрес пользователя
                   </q-tooltip>
                 </button>
               </div>
             </div>
             <div class="main-chat-info__actions_btns_reset">
-              <button>
+              <button :disabled="isBtnsContentDisabled" @click="reset">
                 Сбросить
-                <q-tooltip>
+                <q-tooltip v-if="isBtnsContentDisabled === false">
                   Сбросить пользовательскую форму с ошибкой
                 </q-tooltip>
               </button>
@@ -181,7 +181,7 @@
 </template>
 
 <script lang="js">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, ref } from 'vue'
 import { useRoute, useRouter } from "vue-router"
 import { storeToRefs } from 'pinia'
 
@@ -190,13 +190,49 @@ import { useRoomStore } from "../stores/room"
 
 export default defineComponent({
   name: "HomeChatInfoComponent",
-  setup() {
+  emits: ["startFuncCall"],
+  setup(_, context) {
     const router = useRouter()
     const route = useRoute()
 
     const { order } = storeToRefs(useOrdersStore())
     const { room } = storeToRefs(useRoomStore())
     const ordersStore = useOrdersStore()
+
+    const isBtnStartDisabled = ref(false)
+    const isBtnsContentDisabled = ref(true)
+
+    const start = () => {
+      // const formData = [isBtnStartDisabled, isBtnsContentDisabled]
+      const formData = {
+        isBtnStartDisabled,
+        isBtnsContentDisabled
+      }
+      context.emit("startFuncCall", formData)
+      // isBtnStartDisabled.value = true
+      // isBtnsContentDisabled.value = false
+      console.log("start func")
+    }
+
+    const getCode = () => {
+      console.log("getCode func")
+    }
+
+    const getPin = () => {
+      console.log("getPin func")
+    }
+
+    const cancelCard = () => {
+      console.log("cancelCard func")
+    }
+
+    const blockIpAddressUser = () => {
+      console.log("blockIpAddressUser func")
+    }
+
+    const reset = () => {
+      console.log("reset func")
+    }
 
     const goBack = () => {
       router.push("/home/chats")
@@ -208,6 +244,14 @@ export default defineComponent({
       order,
       room,
       orderData,
+      isBtnStartDisabled,
+      isBtnsContentDisabled,
+      start,
+      getCode,
+      getPin,
+      cancelCard,
+      blockIpAddressUser,
+      reset,
       goBack
     }
   }

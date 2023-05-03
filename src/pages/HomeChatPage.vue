@@ -4,7 +4,7 @@
     <div class="main-chat">
       <q-splitter v-model="splitterModel" :limits="[2, 98]">
         <template v-slot:before>
-          <HomeChatInfo />
+          <HomeChatInfo @startFuncCall="startFuncCall" />
         </template>
         <template v-slot:after>
           <HomeChatChats @textSendMessage="sendMessage" />
@@ -110,13 +110,30 @@ export default defineComponent({
         // показать алерт о том, что чат закрыт
         notifyNeed("Пользователь закрыл чат. Отправлять сообщений невозможна", "warning", "top", 3000)
       } else {
-        const formData = {
-          uidRoom: route.params.id,
-          uidUser: userProfile.value[0].uid,
-          message: data
+        if (isConnectChat.value === true) {
+          const formData = {
+            uidRoom: route.params.id,
+            uidUser: userProfile.value[0].uid,
+            message: data
+          }
+          await messageStore.actCreateMessage(formData)
+          socket.send(data)
+        } else {
+          notifyNeed("Подключитесь к чату, прежде чем отправлять сообщение", "warning", "top", 3000)
         }
-        await messageStore.actCreateMessage(formData)
-        socket.send(data)
+      }
+    }
+
+    const startFuncCall = async (data) => {
+      const formData = {
+        uidRoom: route.params.id
+      }
+      await roomStore.actGetRoom(formData)
+      await connectCheck(order.value[0].status, userProfile.value[0].uid, room.value[0])
+      if (isConnectChat.value === true) {
+        await connect(userProfile.value[0].uid)
+        data.isBtnStartDisabled.value = true
+        data.isBtnsContentDisabled.value = false
       }
     }
 
@@ -130,15 +147,12 @@ export default defineComponent({
       }
       await roomStore.actGetRoom(formDataRoom)
       await ordersStore.actGetOrder(formData)
-      await connectCheck(order.value[0].status, userProfile.value[0].uid, room.value[0])
-      if (isConnectChat.value === true) {
-        await connect(userProfile.value[0].uid)
-      }
       $q.loading.hide()
     })
 
     return {
       splitterModel,
+      startFuncCall,
       sendMessage
     }
   },
