@@ -6,6 +6,7 @@ export const useRoomStore = defineStore("room", {
   state: () => {
     return {
       room: [],
+      isLeaveRoom: false,
     };
   },
   getters: {},
@@ -22,6 +23,19 @@ export const useRoomStore = defineStore("room", {
         }
       } catch (error) {
         console.log("error in actGetRoom -->", error);
+      }
+    },
+    async actLeaveRoom(formData) {
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/room/leave-room",
+          formData
+        );
+        if (response.data.status === 200) {
+          this.isLeaveRoom = true;
+        }
+      } catch (error) {
+        console.log("error in actLeaveRoom -->", error);
       }
     },
   },

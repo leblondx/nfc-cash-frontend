@@ -28,8 +28,12 @@
                 'main-chat-info__status_textc': order.status === 'Chat closed',
                 'main-chat-info__status_textw': order.status === 'Waiting for user'
               }">
-              {{
+              <!-- {{
                 order.status === "Action required" ? "Необходимо действие" : order.status === "Waiting for user" ?
+                "Ожидает пользователя" : order.status === "Chat closed" ? "Чат закрыт" : ""
+              }} -->
+              {{
+                order.status === "Action required" ? "Чат активен" : order.status === "Waiting for user" ?
                 "Ожидает пользователя" : order.status === "Chat closed" ? "Чат закрыт" : ""
               }}
             </div>

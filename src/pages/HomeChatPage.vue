@@ -56,6 +56,7 @@ export default defineComponent({
     let socket
     const splitterModel = ref(38)
     const isConnectChat = ref(false)
+    const isUserCloseChat = ref(false)
 
     const connect = async (userUid) => {
       socket = new WebSocket(`ws://localhost:8080/room/join-room/${route.params.id}?uidUser=${userUid}`)
@@ -68,6 +69,18 @@ export default defineComponent({
           uidRoom: receiveMessage.roomId,
           uidUser: receiveMessage.uidUser,
           message: receiveMessage.content
+        }
+        if (receiveMessage.content === "----Пользователь покинул чат----") {
+          formData.message = "Пользователь покинул чат"
+          const formDataLeaveRoom = {
+            uidRoom: room.value[0].uid_room,
+            uidUser: room.value[0].members[0],
+          }
+          await roomStore.actLeaveRoom(formDataLeaveRoom)
+          if (roomStore.isLeaveRoom === true) {
+            isUserCloseChat.value = true
+            order.value[0].status = "Chat closed"
+          }
         }
         await messageStore.actReceiveMessage(formData)
       }
@@ -100,11 +113,13 @@ export default defineComponent({
             isConnectChat.value = true
           }
         }
+      } else {
+        notifyNeed("Пользователь закрыл чат. Отправлять сообщений невозможна", "warning", "top", 3000)
       }
     }
 
     const sendMessage = async (data) => { // отправка сообщения по сокетам
-      if (order.value[0].status === "Chat closed") {
+      if (order.value[0].status === "Chat closed" || isUserCloseChat.value === true) {
         notifyNeed("Пользователь закрыл чат. Отправлять сообщений невозможна", "warning", "top", 3000)
       } else {
         if (isConnectChat.value === true) {
@@ -124,7 +139,7 @@ export default defineComponent({
     const sendMessageCommand = async (data) => {
       let message = data
       console.log("data -->", data)
-      if (order.value[0].status === "Chat closed") {
+      if (order.value[0].status === "Chat closed" || isUserCloseChat.value === true) {
         notifyNeed("Пользователь закрыл чат. Отправлять сообщений невозможна", "warning", "top", 3000)
       } else {
         if (isConnectChat.value === true) {
