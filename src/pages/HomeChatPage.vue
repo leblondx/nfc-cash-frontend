@@ -4,7 +4,7 @@
     <div class="main-chat">
       <q-splitter v-model="splitterModel" :limits="[2, 98]">
         <template v-slot:before>
-          <HomeChatInfo @startFuncCall="startFuncCall" />
+          <HomeChatInfo @startFuncCall="startFuncCall" @sendMessageCommand="sendMessageCommand" />
         </template>
         <template v-slot:after>
           <HomeChatChats @textSendMessage="sendMessage" />
@@ -104,9 +104,7 @@ export default defineComponent({
     }
 
     const sendMessage = async (data) => { // отправка сообщения по сокетам
-      // сохранение в базе данных сообщения
       if (order.value[0].status === "Chat closed") {
-        // показать алерт о том, что чат закрыт
         notifyNeed("Пользователь закрыл чат. Отправлять сообщений невозможна", "warning", "top", 3000)
       } else {
         if (isConnectChat.value === true) {
@@ -114,6 +112,41 @@ export default defineComponent({
             uidRoom: route.params.id,
             uidUser: userProfile.value[0].uid,
             message: data
+          }
+          await messageStore.actCreateMessage(formData)
+          socket.send(data)
+        } else {
+          notifyNeed("Подключитесь к чату, прежде чем отправлять сообщение", "warning", "top", 3000)
+        }
+      }
+    }
+
+    const sendMessageCommand = async (data) => {
+      let message = data
+      console.log("data -->", data)
+      if (order.value[0].status === "Chat closed") {
+        notifyNeed("Пользователь закрыл чат. Отправлять сообщений невозможна", "warning", "top", 3000)
+      } else {
+        if (isConnectChat.value === true) {
+          const formData = {
+            uidRoom: route.params.id,
+            uidUser: userProfile.value[0].uid,
+            message: message
+          }
+          if (message === "----CODE----") {
+            formData.message = "Отправили действие на получение кода"
+          }
+          if (message === "----PIN----") {
+            formData.message = "Отправили действие на получение пин кода"
+          }
+          if (message === "----CANCELCARD----") {
+            formData.message = "Отправили действие на отклонение карты пользователя"
+          }
+          if (message === "----BLOCKIP----") {
+            formData.message = "Отправили действие на блокировку ip адреса пользователя"
+          }
+          if (message === "----RESET----") {
+            formData.message = "Отправили действие на сброс формы с ошибкой"
           }
           await messageStore.actCreateMessage(formData)
           socket.send(data)
@@ -152,7 +185,8 @@ export default defineComponent({
     return {
       splitterModel,
       startFuncCall,
-      sendMessage
+      sendMessage,
+      sendMessageCommand
     }
   },
   components: {

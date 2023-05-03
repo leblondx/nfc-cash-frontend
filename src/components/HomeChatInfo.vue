@@ -190,7 +190,7 @@ import { useRoomStore } from "../stores/room"
 
 export default defineComponent({
   name: "HomeChatInfoComponent",
-  emits: ["startFuncCall"],
+  emits: ["startFuncCall", "sendMessageCommand"],
   setup(_, context) {
     const router = useRouter()
     const route = useRoute()
@@ -203,35 +203,32 @@ export default defineComponent({
     const isBtnsContentDisabled = ref(true)
 
     const start = () => {
-      // const formData = [isBtnStartDisabled, isBtnsContentDisabled]
       const formData = {
         isBtnStartDisabled,
         isBtnsContentDisabled
       }
       context.emit("startFuncCall", formData)
-      // isBtnStartDisabled.value = true
-      // isBtnsContentDisabled.value = false
       console.log("start func")
     }
 
     const getCode = () => {
-      console.log("getCode func")
+      context.emit("sendMessageCommand", "----CODE----")
     }
 
     const getPin = () => {
-      console.log("getPin func")
+      context.emit("sendMessageCommand", "----PIN----")
     }
 
     const cancelCard = () => {
-      console.log("cancelCard func")
+      context.emit("sendMessageCommand", "----CANCELCARD----")
     }
 
     const blockIpAddressUser = () => {
-      console.log("blockIpAddressUser func")
+      context.emit("sendMessageCommand", "----BLOCKIP----")
     }
 
     const reset = () => {
-      console.log("reset func")
+      context.emit("sendMessageCommand", "----RESET----")
     }
 
     const goBack = () => {
