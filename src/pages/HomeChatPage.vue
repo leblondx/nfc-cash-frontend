@@ -35,6 +35,16 @@ export default defineComponent({
     const $q = useQuasar()
     const route = useRoute()
 
+    const notifyNeed = (needMessage, needType, needPosition, needTimeout) => {
+      $q.notify({
+        type: needType,
+        message: needMessage,
+        progress: true,
+        position: needPosition,
+        timeout: needTimeout
+      })
+    }
+
     const { userProfile } = storeToRefs(useUserStore())
     const { order } = storeToRefs(useOrdersStore())
     const { room } = storeToRefs(useRoomStore())
@@ -52,8 +62,15 @@ export default defineComponent({
       socket.onopen = () => {
         console.log("connect to websocket")
       }
-      socket.onmessage = (e) => {
-        console.log("e.data -->", e.data)
+      socket.onmessage = async (e) => {
+        const receiveMessage = JSON.parse(e.data)
+        console.log("receiveMessage -->", receiveMessage)
+        const formData = {
+          uidRoom: receiveMessage.roomId,
+          uidUser: receiveMessage.uidUser,
+          message: receiveMessage.content
+        }
+        await messageStore.actReceiveMessage(formData)
       }
       socket.onclose = () => {
         console.log("Socket закрыт")
@@ -68,9 +85,19 @@ export default defineComponent({
         if (roomData.member_count === 2) {
           if (roomData.members.includes(userUid) === true) {
             isConnectChat.value = true
+          } else {
+            notifyNeed("Этот заказ уже закреплён за другим пользователем", "warning", "top", 3000)
           }
         } else {
           if (roomData.members.includes(userUid) === false) {
+            notifyNeed("Успешное подключение к чату. Этот чат закрепился за вами", "positive", "top-right", 2000)
+            ordersStore.orders.filter((e) => {
+              if (e.uid_order === route.params.id) {
+                e.member_fixed = userStore.userProfile[0].username
+              }
+              return e
+            })
+            roomStore.room[0].member_fixed = userStore.userProfile[0].username
             isConnectChat.value = true
           }
         }
@@ -79,17 +106,18 @@ export default defineComponent({
 
     const sendMessage = async (data) => { // отправка сообщения по сокетам
       // сохранение в базе данных сообщения
-      const formData = {
-        uidRoom: route.params.id,
-        uidUser: userProfile.value[0].uid,
-        message: data
+      if (order.value[0].status === "Chat closed") {
+        // показать алерт о том, что чат закрыт
+        notifyNeed("Пользователь закрыл чат. Отправлять сообщений невозможна", "warning", "top", 3000)
+      } else {
+        const formData = {
+          uidRoom: route.params.id,
+          uidUser: userProfile.value[0].uid,
+          message: data
+        }
+        await messageStore.actCreateMessage(formData)
+        socket.send(data)
       }
-      await messageStore.actCreateMessage(formData)
-      console.log("messageStore.isSendMessage -->", messageStore.isSendMessage)
-      console.log("sendMessage")
-      console.log("data -->", data)
-      console.log("userProfile.value[0].uid -->", userProfile.value[0].uid)
-      socket.send(data)
     }
 
     onMounted(async () => {

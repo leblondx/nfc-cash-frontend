@@ -58,6 +58,19 @@ export const useMessageStore = defineStore("message", {
         console.log("error in actGetRoomMessages -->", error);
       }
     },
+    async actReceiveMessage(formData) {
+      try {
+        this.messages.push({
+          id: this.messages[this.messages.length - 1].id + 1,
+          uid_room: formData.uidRoom,
+          uid_user: formData.uidUser,
+          message: formData.message,
+          created: DateTime.now().toFormat("dd-MM-yyyy hh:mm"),
+        });
+      } catch (error) {
+        console.log("error in actReceiveMessage -->", error);
+      }
+    },
   },
 });
 
