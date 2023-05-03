@@ -11,11 +11,11 @@
       <q-card-section>
         <div class="main-chat-info">
           <div class="main-chat-info__date">
-            <div class="main-chat-info__date_title">Дата создания:</div>
+            <div class="main-chat-info__date_title">Создан:</div>
             <div class="main-chat-info__date_text">{{ order.created }}</div>
           </div>
           <div class="main-chat-info__lo">
-            <div class="main-chat-info__lo_title">Закреплённый пользователь:</div>
+            <div class="main-chat-info__lo_title">Ответственный:</div>
             <div class="main-chat-info__lo_text">
               {{
                 room[0].member_fixed === "" ? "Свободный заказ" : room[0].member_fixed
@@ -878,6 +878,12 @@ export default defineComponent({
   .main-chat-info__back_btn>button {
     height: 40px;
     font-size: 9px;
+  }
+}
+
+@media (max-width: 428px) {
+  .main-chat-info__ui {
+    height: 235px;
   }
 }
 

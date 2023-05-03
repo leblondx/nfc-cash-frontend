@@ -43,7 +43,11 @@ export const useOrdersStore = defineStore("orders", {
         );
         console.log("response.data -->", response.data);
         if (response.data.status === 200) {
-          this.order = response.data.result;
+          this.order = response.data.result.filter((e) => {
+            const date = DateTime.fromISO(e.created);
+            e.created = date.toFormat("dd-MM-yyyy hh:mm");
+            return e;
+          });
         }
       } catch (error) {
         console.log("error in actGetOrder -->", error);
