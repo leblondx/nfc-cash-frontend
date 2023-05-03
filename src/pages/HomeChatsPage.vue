@@ -25,7 +25,7 @@
                   'main-chats__content__block_status_textw': order.status === 'Waiting for user'
                 }">
                 {{
-                  order.status === "Action required" ? "Необходимо действие" : order.status === "Waiting for user" ?
+                  order.status === "Action required" ? "Чат активен" : order.status === "Waiting for user" ?
                   "Ожидает пользователя" : order.status === "Chat closed" ? "Чат закрыт" : ""
                 }}
               </div>

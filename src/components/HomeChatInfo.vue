@@ -186,22 +186,37 @@
 
 <script lang="js">
 import { defineComponent, computed, ref } from 'vue'
+import { useQuasar } from 'quasar'
 import { useRoute, useRouter } from "vue-router"
 import { storeToRefs } from 'pinia'
 
 import { useOrdersStore } from "../stores/orders"
 import { useRoomStore } from "../stores/room"
+import { useIpStore } from "../stores/ip"
 
 export default defineComponent({
   name: "HomeChatInfoComponent",
   emits: ["startFuncCall", "sendMessageCommand"],
   setup(_, context) {
+    const $q = useQuasar()
     const router = useRouter()
     const route = useRoute()
+
+    const notifyNeed = (needMessage, needType, needPosition, needTimeout) => {
+      $q.notify({
+        type: needType,
+        message: needMessage,
+        progress: true,
+        position: needPosition,
+        timeout: needTimeout
+      })
+    }
 
     const { order } = storeToRefs(useOrdersStore())
     const { room } = storeToRefs(useRoomStore())
     const ordersStore = useOrdersStore()
+    const roomStore = useRoomStore()
+    const ipStore = useIpStore()
 
     const isBtnStartDisabled = ref(false)
     const isBtnsContentDisabled = ref(true)
@@ -227,8 +242,18 @@ export default defineComponent({
       context.emit("sendMessageCommand", "----CANCELCARD----")
     }
 
-    const blockIpAddressUser = () => {
-      context.emit("sendMessageCommand", "----BLOCKIP----")
+    const blockIpAddressUser = async () => {
+      if (ipStore.isCheckIpBlock === true) {
+        notifyNeed("Ip адрес пользователя уже заблокирован", "warning", "top", 3000)
+      } else {
+        const formData = {
+          ip_address: order.value[0].ip_address
+        }
+        await ipStore.actBlockIp(formData)
+        if (ipStore.isBlockIp === true) {
+          context.emit("sendMessageCommand", "----BLOCKIP----")
+        }
+      }
     }
 
     const reset = () => {

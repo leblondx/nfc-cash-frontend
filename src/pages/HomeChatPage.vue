@@ -28,6 +28,7 @@ import { useUserStore } from "../stores/user"
 import { useOrdersStore } from "../stores/orders"
 import { useRoomStore } from "../stores/room"
 import { useMessageStore } from "../stores/message"
+import { useIpStore } from "../stores/ip"
 
 export default defineComponent({
   name: "HomeChatPage",
@@ -52,6 +53,7 @@ export default defineComponent({
     const ordersStore = useOrdersStore()
     const roomStore = useRoomStore()
     const messageStore = useMessageStore()
+    const ipStore = useIpStore()
 
     let socket
     const splitterModel = ref(38)
@@ -114,13 +116,13 @@ export default defineComponent({
           }
         }
       } else {
-        notifyNeed("Пользователь закрыл чат. Отправлять сообщений невозможна", "warning", "top", 3000)
+        notifyNeed("Пользователь закрыл чат. Отправлять сообщений невозможно", "warning", "top", 3000)
       }
     }
 
     const sendMessage = async (data) => { // отправка сообщения по сокетам
       if (order.value[0].status === "Chat closed" || isUserCloseChat.value === true) {
-        notifyNeed("Пользователь закрыл чат. Отправлять сообщений невозможна", "warning", "top", 3000)
+        notifyNeed("Пользователь закрыл чат. Отправлять сообщений невозможно", "warning", "top", 3000)
       } else {
         if (isConnectChat.value === true) {
           const formData = {
@@ -140,7 +142,7 @@ export default defineComponent({
       let message = data
       console.log("data -->", data)
       if (order.value[0].status === "Chat closed" || isUserCloseChat.value === true) {
-        notifyNeed("Пользователь закрыл чат. Отправлять сообщений невозможна", "warning", "top", 3000)
+        notifyNeed("Пользователь закрыл чат. Отправлять сообщений невозможно", "warning", "top", 3000)
       } else {
         if (isConnectChat.value === true) {
           const formData = {
@@ -159,6 +161,16 @@ export default defineComponent({
           }
           if (message === "----BLOCKIP----") {
             formData.message = "Отправили действие на блокировку ip адреса пользователя"
+            const formDataLeaveRoom = {
+              uidRoom: room.value[0].uid_room,
+              uidUser: room.value[0].members[0],
+            }
+            await roomStore.actLeaveRoom(formDataLeaveRoom)
+            if (roomStore.isLeaveRoom === true) {
+              isUserCloseChat.value = true
+              order.value[0].status = "Chat closed"
+              notifyNeed("Ip адрес пользователя был успешно добавлен в чёрный список. Чат автоматически был закрыт", "warning", "top", 4000)
+            }
           }
           if (message === "----RESET----") {
             formData.message = "Отправили действие на сброс формы с ошибкой"
@@ -194,6 +206,10 @@ export default defineComponent({
       }
       await roomStore.actGetRoom(formDataRoom)
       await ordersStore.actGetOrder(formData)
+      const formDataCheckIpBlock = {
+        ip_address: order.value[0].ip_address
+      }
+      await ipStore.actCheckIpBlock(formDataCheckIpBlock)
       $q.loading.hide()
     })
 
