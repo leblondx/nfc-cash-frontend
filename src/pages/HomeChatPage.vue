@@ -64,7 +64,6 @@ export default defineComponent({
       }
       socket.onmessage = async (e) => {
         const receiveMessage = JSON.parse(e.data)
-        console.log("receiveMessage -->", receiveMessage)
         const formData = {
           uidRoom: receiveMessage.roomId,
           uidUser: receiveMessage.uidUser,
