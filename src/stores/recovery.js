@@ -17,7 +17,7 @@ export const useRecoveryStore = defineStore("recovery", {
     async actRecoveryPasswordSendMessage(formData) {
       try {
         const response = await axios.post(
-          "http://localhost:8080/recovery/recovery-password-send-message",
+          "https://localhost:8080/recovery/recovery-password-send-message",
           formData
         );
         console.log("response.data -->", response.data);
@@ -31,7 +31,7 @@ export const useRecoveryStore = defineStore("recovery", {
     async actCheckRecoveryPassword(formData) {
       try {
         const response = await axios.post(
-          "http://localhost:8080/recovery/check-recovery-password",
+          "https://localhost:8080/recovery/check-recovery-password",
           formData
         );
         console.log("response.data -->", response.data);
@@ -45,7 +45,7 @@ export const useRecoveryStore = defineStore("recovery", {
     async actRecoveryPasswordComplete(formData) {
       try {
         const response = await axios.post(
-          "http://localhost:8080/recovery/recovery-password-complete",
+          "https://localhost:8080/recovery/recovery-password-complete",
           formData
         );
         console.log("response.data -->", response.data);
@@ -59,7 +59,7 @@ export const useRecoveryStore = defineStore("recovery", {
     async actRecoveryPasswordCompare(formData) {
       try {
         const response = await axios.post(
-          "http://localhost:8080/recovery/recovery-password-compare",
+          "https://localhost:8080/recovery/recovery-password-compare",
           formData
         );
         console.log("response.data -->", response.data);
@@ -73,7 +73,7 @@ export const useRecoveryStore = defineStore("recovery", {
     async actRecoveryPassword(formData) {
       try {
         const response = await axios.post(
-          "http://localhost:8080/recovery/recovery-password",
+          "https://localhost:8080/recovery/recovery-password",
           formData
         );
         console.log("response.data -->", response.data);

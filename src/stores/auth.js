@@ -19,7 +19,7 @@ export const useAuthStore = defineStore("auth", {
       // регистрация пользователя
       try {
         const response = await axios.post(
-          "http://localhost:8080/auth/sign-up",
+          "https://localhost:8080/auth/sign-up",
           formData
         );
         console.log("response.data -->", response.data);
@@ -34,7 +34,7 @@ export const useAuthStore = defineStore("auth", {
       // авторизация пользователя
       try {
         const response = await axios.post(
-          "http://localhost:8080/auth/sign-in",
+          "https://localhost:8080/auth/sign-in",
           formData
         );
         console.log("response.data -->", response.data);
@@ -50,7 +50,7 @@ export const useAuthStore = defineStore("auth", {
     async actCheckEmailExist(formData) {
       try {
         const response = await axios.post(
-          "http://localhost:8080/auth/check-email-exist",
+          "https://localhost:8080/auth/check-email-exist",
           formData
         );
         console.log("response.data -->", response.data);
@@ -67,7 +67,7 @@ export const useAuthStore = defineStore("auth", {
     async actCheckUsernameExist(formData) {
       try {
         const response = await axios.post(
-          "http://localhost:8080/auth/check-username-exist",
+          "https://localhost:8080/auth/check-username-exist",
           formData
         );
         console.log("response.data -->", response.data);
@@ -84,7 +84,7 @@ export const useAuthStore = defineStore("auth", {
     async actCheckConfirmAccount(formData) {
       try {
         const response = await axios.post(
-          "http://localhost:8080/auth/check-confirm-account",
+          "https://localhost:8080/auth/check-confirm-account",
           formData
         );
         console.log("response.data -->", response.data);

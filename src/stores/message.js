@@ -16,7 +16,7 @@ export const useMessageStore = defineStore("message", {
     async actCreateMessage(formData) {
       try {
         const response = await axios.post(
-          "http://localhost:8080/message/create-message",
+          "https://localhost:8080/message/create-message",
           formData
         );
         console.log("response.data -->", response.data);
@@ -38,7 +38,7 @@ export const useMessageStore = defineStore("message", {
     async actGetRoomMessages(formData) {
       try {
         const response = await axios.post(
-          "http://localhost:8080/message/get-room-messages",
+          "https://localhost:8080/message/get-room-messages",
           formData
         );
         console.log("response.data -->", response.data);

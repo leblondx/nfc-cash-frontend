@@ -14,7 +14,7 @@ export const useRoomStore = defineStore("room", {
     async actGetRoom(formData) {
       try {
         const response = await axios.post(
-          "http://localhost:8080/room/get-room",
+          "https://localhost:8080/room/get-room",
           formData
         );
         console.log("response.data -->", response.data);
@@ -28,7 +28,7 @@ export const useRoomStore = defineStore("room", {
     async actLeaveRoom(formData) {
       try {
         const response = await axios.post(
-          "http://localhost:8080/room/leave-room",
+          "https://localhost:8080/room/leave-room",
           formData
         );
         if (response.data.status === 200) {

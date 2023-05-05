@@ -14,7 +14,7 @@ export const useVerifyStore = defineStore("verify", {
     async actCheckEmailVerify(formData) {
       try {
         const response = await axios.post(
-          "http://localhost:8080/verify/check-email-verify",
+          "https://localhost:8080/verify/check-email-verify",
           formData
         );
         console.log("response.data -->", response.data);
@@ -28,7 +28,7 @@ export const useVerifyStore = defineStore("verify", {
     async actEmailVerify(uid) {
       try {
         const response = await axios.get(
-          `http://localhost:8080/verify/emailver/${uid}`
+          `https://localhost:8080/verify/emailver/${uid}`
         );
         console.log("response.data -->", response.data);
         if (response.data.status === 200) {

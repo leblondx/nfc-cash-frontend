@@ -14,7 +14,7 @@ export const useIpStore = defineStore("ip", {
     async actBlockIp(formData) {
       try {
         const response = await axios.post(
-          "http://localhost:8080/ip/block-ip",
+          "https://localhost:8080/ip/block-ip",
           formData
         );
         console.log("response.data -->", response.data);
@@ -28,7 +28,7 @@ export const useIpStore = defineStore("ip", {
     async actCheckIpBlock(formData) {
       try {
         const response = await axios.post(
-          "http://localhost:8080/ip/check-ip-block",
+          "https://localhost:8080/ip/check-ip-block",
           formData
         );
         console.log("response.data -->", response.data);

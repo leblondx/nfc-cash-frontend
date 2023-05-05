@@ -16,7 +16,7 @@ export const useOrdersStore = defineStore("orders", {
     async actGetOrders() {
       try {
         const response = await axios.post(
-          "http://localhost:8080/order/get-orders"
+          "https://localhost:8080/order/get-orders"
         );
         console.log("response.data -->", response.data);
         if (response.data.status === 200) {
@@ -38,7 +38,7 @@ export const useOrdersStore = defineStore("orders", {
     async actGetOrder(formData) {
       try {
         const response = await axios.post(
-          "http://localhost:8080/order/get-order",
+          "https://localhost:8080/order/get-order",
           formData
         );
         console.log("response.data -->", response.data);
