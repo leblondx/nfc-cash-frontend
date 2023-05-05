@@ -12,4 +12,8 @@ export default class AdminService {
   static userConfirmAccount(formData) {
     return $api.post("api-v1/admin/user-confirm-account", formData);
   }
+
+  static changeUser(formData) {
+    return $api.post("api-v1/admin/change-user", formData);
+  }
 }

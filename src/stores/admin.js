@@ -9,6 +9,7 @@ export const useAdminStore = defineStore("admin", {
       usersUnConfirm: [],
       isEmptyUsersConfirm: false,
       isEmptyUsersUnConfirm: false,
+      isChangeUser: false,
     };
   },
   getters: {},
@@ -56,6 +57,28 @@ export const useAdminStore = defineStore("admin", {
         }
       } catch (error) {
         console.log("error in actUserConfirmAccount -->", error);
+      }
+    },
+    async actChangeUser(formData) {
+      try {
+        const response = await adminService.changeUser(formData);
+        console.log("response.data -->", response.data);
+        if (response.data.status === 200) {
+          if (response.data.result === true) {
+            this.isChangeUser = true;
+            this.usersConfirm = this.usersConfirm.filter((e) => {
+              if (e.id === formData.id) {
+                e.username = formData.username;
+                e.tele_id = formData.tele_id;
+                e.email = formData.email;
+                e.role = formData.role;
+              }
+              return e;
+            });
+          }
+        }
+      } catch (error) {
+        console.log("error in actChangeUser -->", error);
       }
     },
   },
