@@ -57,7 +57,7 @@ export const useTelegramStore = defineStore("telegram", {
               console.log("this.telegramBots 2-->", this.telegramBots);
             } else {
               console.log("this.telegramBots 3-->", this.telegramBots);
-              this.telegramBots = this.telegramBots.push({
+              this.telegramBots.push({
                 id: this.telegramBots[this.telegramBots.length - 1].id + 1,
                 name: formData.name,
                 token: formData.token,
