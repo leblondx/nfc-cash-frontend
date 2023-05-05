@@ -108,11 +108,9 @@ export default defineComponent({
         const formData = {
           email: forgotPasswordForm.value.emailUser
         }
-        console.log("formData -->", formData)
         await recoveryStore.actRecoveryPasswordSendMessage(formData)
         isButtonDisabled.value = false
         $q.loading.hide()
-        console.log("forgotPasswordForm.value.emailUser -->", forgotPasswordForm.value.emailUser)
         alertEmailText.value = forgotPasswordForm.value.emailUser
         alertForgotPassword.value = true
         if (recoveryStore.isRecoveryPasswordSendMessage === true) {
@@ -124,6 +122,7 @@ export default defineComponent({
         }
       }
     }
+
     return {
       forgotPasswordForm,
       v$,

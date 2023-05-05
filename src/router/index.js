@@ -48,6 +48,8 @@ export default route(function () {
       "/home/users/",
       "/home/confirm",
       "/home/confirm/",
+      "/home/settings-bot",
+      "/home/settings-bot/",
     ];
     if (
       pathUnAuth.includes(to.path) === true ||

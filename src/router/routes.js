@@ -54,6 +54,10 @@ const routes = [
         path: "/home/confirm",
         component: () => import("pages/HomeConfirmPage.vue"),
       },
+      {
+        path: "/home/settings-bot",
+        component: () => import("pages/HomeSettingsBotPage.vue"),
+      },
     ],
   },
   {

@@ -18,8 +18,8 @@
         <q-tab name="chats" label="Чаты" @click="changeTab" />
         <q-tab v-if="isAdmin || isSuperAdmin" name="users" label="Пользователи" @click="changeTab" />
         <q-tab v-if="isAdmin || isSuperAdmin" name="confirm" label="Подтверждение" @click="changeTab" />
-        <q-tab v-if="isAdmin || isSuperAdmin" name="sites" label="Сайты" @click="changeTab" />
-        <q-tab name="settings" label="Настройки" @click="changeTab" />
+        <!-- <q-tab name="sites" label="Сайты" @click="changeTab" /> -->
+        <q-tab v-if="isAdmin || isSuperAdmin" name="settings-bot" label="Настройка бота" @click="changeTab" />
       </q-tabs>
       <q-space />
       <q-tabs>
@@ -91,8 +91,8 @@ export default defineComponent({
     if (props.activePage === "confirm") {
       tab.value = "confirm"
     }
-    if (props.activePage === "settings") {
-      tab.value = "settings"
+    if (props.activePage === "settings-bot") {
+      tab.value = "settings-bot"
     }
 
     const changeTab = () => {

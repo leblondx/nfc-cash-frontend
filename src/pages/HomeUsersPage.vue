@@ -29,6 +29,7 @@ import HomeUsersEdit from "../components/HomeUsersEdit.vue"
 import { useAdminStore } from "../stores/admin"
 
 export default defineComponent({
+  name: "HomeUsersPage",
   setup() {
     const $q = useQuasar()
     const { isEmptyUsersConfirm } = storeToRefs(useAdminStore())
