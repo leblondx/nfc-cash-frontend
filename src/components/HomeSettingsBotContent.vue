@@ -58,7 +58,7 @@
     </div>
     <div class="main-settings-create">
       <div class="main-settings-create__btn">
-        <button @click="showDialogCreateBot">Создать бота</button>
+        <button @click="showDialogCreateBot">Добавить бота</button>
       </div>
     </div>
     <q-dialog v-model="confirmDialogTurnOn" persistent>
