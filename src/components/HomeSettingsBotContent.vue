@@ -141,7 +141,7 @@
               </div>
               <div class="main-settings__dialog_form_row">
                 <div class="main-settings__dialog_form_row_label">
-                  <label for="chatId">Чат id группы</label>
+                  <label for="chatId">Чат id группы (со знаком минус)</label>
                 </div>
                 <input class="main-settings__dialog_form_row_input"
                   :class="{ 'input-error': v$.chatId.$errors.length > 0 }" id="chatId" type="text"
