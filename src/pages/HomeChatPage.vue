@@ -61,7 +61,7 @@ export default defineComponent({
     const isUserCloseChat = ref(false)
 
     const connect = async (userUid) => {
-      socket = new WebSocket(`wss://localhost:8080/room/join-room/${route.params.id}?uidUser=${userUid}`)
+      socket = new WebSocket(`ws://localhost:8080/room/join-room/${route.params.id}?uidUser=${userUid}`)
       socket.onopen = () => {
         console.log("connect to websocket")
       }
