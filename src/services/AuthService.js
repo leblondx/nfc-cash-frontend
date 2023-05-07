@@ -1,19 +1,23 @@
 import $api from "../http/index";
 
 export default class AuthService {
-  static async registration(formData) {
-    return $api.post("/auth/sign-up", formData);
+  static async signUp(formData) {
+    return $api.post("auth/sign-up", formData);
   }
 
-  static async login(formData) {
-    return $api.post("/login", formData);
+  static async signIn(formData) {
+    return $api.post("auth/sign-in", formData);
   }
 
-  static async logout() {
-    return $api.post("/logout");
+  static async checkEmailExist(formData) {
+    return $api.post("auth/check-email-exist", formData);
   }
 
-  static async recovery(formData) {
-    return $api.post("/recovery", formData);
+  static async checkUsernameExist(formData) {
+    return $api.post("auth/check-username-exist", formData);
+  }
+
+  static async checkConfirmAccount(formData) {
+    return $api.post("auth/check-confirm-account", formData);
   }
 }

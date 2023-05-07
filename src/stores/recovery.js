@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 
 import axios from "axios";
 
+import recoveryService from "../services/RecoveryService";
+
 export const useRecoveryStore = defineStore("recovery", {
   state: () => {
     return {
@@ -16,8 +18,7 @@ export const useRecoveryStore = defineStore("recovery", {
   actions: {
     async actRecoveryPasswordSendMessage(formData) {
       try {
-        const response = await axios.post(
-          "https://localhost:8080/recovery/recovery-password-send-message",
+        const response = await recoveryService.recoveryPasswordSendMessage(
           formData
         );
         console.log("response.data -->", response.data);
@@ -30,10 +31,7 @@ export const useRecoveryStore = defineStore("recovery", {
     },
     async actCheckRecoveryPassword(formData) {
       try {
-        const response = await axios.post(
-          "https://localhost:8080/recovery/check-recovery-password",
-          formData
-        );
+        const response = await recoveryService.checkRecoveryPassword(formData);
         console.log("response.data -->", response.data);
         if (response.data.status === 200) {
           this.isCheckRecoveryPassword = response.data.result;
@@ -44,8 +42,7 @@ export const useRecoveryStore = defineStore("recovery", {
     },
     async actRecoveryPasswordComplete(formData) {
       try {
-        const response = await axios.post(
-          "https://localhost:8080/recovery/recovery-password-complete",
+        const response = await recoveryService.recoveryPasswordComplete(
           formData
         );
         console.log("response.data -->", response.data);
@@ -58,8 +55,7 @@ export const useRecoveryStore = defineStore("recovery", {
     },
     async actRecoveryPasswordCompare(formData) {
       try {
-        const response = await axios.post(
-          "https://localhost:8080/recovery/recovery-password-compare",
+        const response = await recoveryService.recoveryPasswordCompare(
           formData
         );
         console.log("response.data -->", response.data);
@@ -72,10 +68,7 @@ export const useRecoveryStore = defineStore("recovery", {
     },
     async actRecoveryPassword(formData) {
       try {
-        const response = await axios.post(
-          "https://localhost:8080/recovery/recovery-password",
-          formData
-        );
+        const response = await recoveryService.recoveryPassword(formData);
         console.log("response.data -->", response.data);
         if (response.data.status === 200) {
           this.isRecoveryPassword = response.data.result;
@@ -86,5 +79,3 @@ export const useRecoveryStore = defineStore("recovery", {
     },
   },
 });
-
-// recovery/recovery-password-send-message

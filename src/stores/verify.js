@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 
 import axios from "axios";
 
+import verifyService from "../services/VerifyService";
+
 export const useVerifyStore = defineStore("verify", {
   state: () => {
     return {
@@ -13,10 +15,7 @@ export const useVerifyStore = defineStore("verify", {
   actions: {
     async actCheckEmailVerify(formData) {
       try {
-        const response = await axios.post(
-          "https://localhost:8080/verify/check-email-verify",
-          formData
-        );
+        const response = await verifyService.checkEmailVerify(formData);
         console.log("response.data -->", response.data);
         if (response.data.status === 200) {
           this.isCheckVerifyEmail = response.data.result;
@@ -27,9 +26,7 @@ export const useVerifyStore = defineStore("verify", {
     },
     async actEmailVerify(uid) {
       try {
-        const response = await axios.get(
-          `https://localhost:8080/verify/emailver/${uid}`
-        );
+        const response = await verifyService.emailVerify(uid);
         console.log("response.data -->", response.data);
         if (response.data.status === 200) {
           if (response.data.result === true) {

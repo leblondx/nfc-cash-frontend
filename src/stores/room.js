@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 
 import axios from "axios";
 
+import roomService from "../services/RoomService";
+
 export const useRoomStore = defineStore("room", {
   state: () => {
     return {
@@ -13,10 +15,7 @@ export const useRoomStore = defineStore("room", {
   actions: {
     async actGetRoom(formData) {
       try {
-        const response = await axios.post(
-          "https://localhost:8080/room/get-room",
-          formData
-        );
+        const response = await roomService.getRoom(formData);
         console.log("response.data -->", response.data);
         if (response.data.status === 200) {
           this.room = response.data.result;
@@ -27,10 +26,7 @@ export const useRoomStore = defineStore("room", {
     },
     async actLeaveRoom(formData) {
       try {
-        const response = await axios.post(
-          "https://localhost:8080/room/leave-room",
-          formData
-        );
+        const response = await roomService.leaveRoom(formData);
         if (response.data.status === 200) {
           this.isLeaveRoom = true;
         }

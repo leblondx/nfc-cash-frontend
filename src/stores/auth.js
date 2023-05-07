@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 
 import axios from "axios";
 
-// import authService from "../services/AuthService";
+import authService from "../services/AuthService";
 
 export const useAuthStore = defineStore("auth", {
   state: () => {
@@ -18,10 +18,7 @@ export const useAuthStore = defineStore("auth", {
     async actSignUpUser(formData) {
       // регистрация пользователя
       try {
-        const response = await axios.post(
-          "https://localhost:8080/auth/sign-up",
-          formData
-        );
+        const response = await authService.signUp(formData);
         console.log("response.data -->", response.data);
         if (response.data.status === 200) {
           this.isRegister = true;
@@ -33,10 +30,7 @@ export const useAuthStore = defineStore("auth", {
     async actSignInUser(formData) {
       // авторизация пользователя
       try {
-        const response = await axios.post(
-          "https://localhost:8080/auth/sign-in",
-          formData
-        );
+        const response = await authService.signIn(formData);
         console.log("response.data -->", response.data);
         if (response.data.status === 200) {
           this.isAuth = true;
@@ -49,10 +43,7 @@ export const useAuthStore = defineStore("auth", {
     },
     async actCheckEmailExist(formData) {
       try {
-        const response = await axios.post(
-          "https://localhost:8080/auth/check-email-exist",
-          formData
-        );
+        const response = await authService.checkEmailExist(formData);
         console.log("response.data -->", response.data);
         if (response.data.status === 200) {
           return {
@@ -66,10 +57,7 @@ export const useAuthStore = defineStore("auth", {
     },
     async actCheckUsernameExist(formData) {
       try {
-        const response = await axios.post(
-          "https://localhost:8080/auth/check-username-exist",
-          formData
-        );
+        const response = await authService.checkUsernameExist(formData);
         console.log("response.data -->", response.data);
         if (response.data.status === 200) {
           return {
@@ -83,10 +71,7 @@ export const useAuthStore = defineStore("auth", {
     },
     async actCheckConfirmAccount(formData) {
       try {
-        const response = await axios.post(
-          "https://localhost:8080/auth/check-confirm-account",
-          formData
-        );
+        const response = await authService.checkConfirmAccount(formData);
         console.log("response.data -->", response.data);
         if (response.data.status === 200) {
           this.isConfirmAccount = response.data.result;
@@ -97,11 +82,3 @@ export const useAuthStore = defineStore("auth", {
     },
   },
 });
-
-/**
- *
- *  getPostAuthor: (state) => {
-      const postStore = usePostStore()
-      return state.authors.find((author) => author.id === postStore.post.userId)
-    }
- */

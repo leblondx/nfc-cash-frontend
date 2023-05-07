@@ -3,6 +3,8 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import { DateTime } from "luxon";
 
+import orderService from "../services/OrderService";
+
 export const useOrdersStore = defineStore("orders", {
   state: () => {
     return {
@@ -15,9 +17,7 @@ export const useOrdersStore = defineStore("orders", {
   actions: {
     async actGetOrders() {
       try {
-        const response = await axios.post(
-          "https://localhost:8080/order/get-orders"
-        );
+        const response = await orderService.getOrders();
         console.log("response.data -->", response.data);
         if (response.data.status === 200) {
           this.orders = response.data.result.filter((e) => {
@@ -37,10 +37,7 @@ export const useOrdersStore = defineStore("orders", {
     },
     async actGetOrder(formData) {
       try {
-        const response = await axios.post(
-          "https://localhost:8080/order/get-order",
-          formData
-        );
+        const response = await orderService.getOrder(formData);
         console.log("response.data -->", response.data);
         if (response.data.status === 200) {
           this.order = response.data.result.filter((e) => {

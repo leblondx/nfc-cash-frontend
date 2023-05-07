@@ -3,6 +3,8 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import { DateTime } from "luxon";
 
+import messageService from "../services/MessageService";
+
 export const useMessageStore = defineStore("message", {
   state: () => {
     return {
@@ -15,10 +17,7 @@ export const useMessageStore = defineStore("message", {
   actions: {
     async actCreateMessage(formData) {
       try {
-        const response = await axios.post(
-          "https://localhost:8080/message/create-message",
-          formData
-        );
+        const response = await messageService.createMessage(formData);
         console.log("response.data -->", response.data);
         if (response.data.status === 200) {
           if (response.data.result === true) {
@@ -37,10 +36,7 @@ export const useMessageStore = defineStore("message", {
     },
     async actGetRoomMessages(formData) {
       try {
-        const response = await axios.post(
-          "https://localhost:8080/message/get-room-messages",
-          formData
-        );
+        const response = await messageService.getRoomMessage(formData);
         console.log("response.data -->", response.data);
         if (response.data.status === 200) {
           this.messages = response.data.result.filter((e) => {
@@ -73,5 +69,3 @@ export const useMessageStore = defineStore("message", {
     },
   },
 });
-
-// get-room-messages
