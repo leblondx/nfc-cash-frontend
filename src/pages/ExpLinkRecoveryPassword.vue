@@ -5,12 +5,12 @@
         <div class="main-content__icon">
           <q-icon name="priority_high" />
         </div>
-        <div class="main-content__title">Восстановление пароля</div>
-        <div class="main-content__text">Время жизни ссылки для восстановления пароля истекла</div>
-        <div class="main-content__text">Перейдите на страницу "Забыли пароль?" и заполните форму ещё раз</div>
-        <div class="main-content__text">Для перехода на страницу Забыли пароль нажмите кнопку "Забыли пароль?"</div>
+        <div class="main-content__title">Récupération de mot de passe</div>
+        <div class="main-content__text">La durée de vie du lien pour la restauration de mot de passe a expiré</div>
+        <div class="main-content__text">Allez sur la page "Mot de passe oublié?"et remplissez à nouveau le formulaire</div>
+        <div class="main-content__text">Pour aller à la page, ils ont oublié le mot de passe, cliquez sur "oublié le mot de passe?"</div>
         <div class="main-content__link">
-          <button @click="goToForgot">Забыли пароль?</button>
+          <button @click="goToForgot">Mot de passe oublié?</button>
         </div>
       </div>
     </div>
@@ -38,7 +38,7 @@ export default defineComponent({
       })
     }
 
-    notifyNeed("Ссылка для восстановления пароля истекла", "warning", "top-right", 2000)
+    notifyNeed("Lien de récupération de mot de passe", "warning", "top-right", 2000)
 
     const goToForgot = () => {
       $q.loading.show()

@@ -5,10 +5,10 @@
         <div class="main-content__icon">
           <q-icon name="done" />
         </div>
-        <div class="main-content__title">Почта уже подтверждена</div>
-        <div class="main-content__text">Для перехода на страницу Входа в приложение нажмите кнопку "Авторизация"</div>
+        <div class="main-content__title">Le courrier a déjà été confirmé</div>
+        <div class="main-content__text">Pour accéder à la page d'entrée de l'application, appuyez sur le "bouton d'autorisation"</div>
         <div class="main-content__link">
-          <button @click="goToAuth">Авторизация</button>
+          <button @click="goToAuth">Autorisation</button>
         </div>
       </div>
     </div>
@@ -35,7 +35,7 @@ export default defineComponent({
       })
     }
 
-    notifyNeed("Ваша электронная почта уже была подтверждена", "positive", "top-right", 2000)
+    notifyNeed("Votre e-mail a déjà été confirmé", "positive", "top-right", 2000)
 
     const goToAuth = () => {
       $q.loading.show()

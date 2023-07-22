@@ -5,11 +5,11 @@
         <div class="main-content__icon">
           <q-icon name="priority_high" />
         </div>
-        <div class="main-content__title">Ошибка подтверждения</div>
-        <div class="main-content__text">Попробуйте подтвердить ваш аккаунт в настройках вашего аккаунта</div>
-        <div class="main-content__text">Для перехода на страницу Входа в приложение нажмите кнопку "Авторизация"</div>
+        <div class="main-content__title">Erreur de confirmation</div>
+        <div class="main-content__text">Essayez de confirmer votre compte dans les paramètres de votre compte</div>
+        <div class="main-content__text">Pour accéder à la page d'entrée de l'application, appuyez sur le bouton "Autorisation"</div>
         <div class="main-content__link">
-          <button @click="goToAuth">Авторизация</button>
+          <button @click="goToAuth">Autorisation</button>
         </div>
       </div>
     </div>
@@ -37,7 +37,7 @@ export default defineComponent({
       })
     }
 
-    notifyNeed("Ошибка подтверждения электронной почты", "warning", "top-right", 2000)
+    notifyNeed("Erraction erractant sont", "warning", "top-right", 2000)
 
     const goToAuth = () => {
       $q.loading.show()

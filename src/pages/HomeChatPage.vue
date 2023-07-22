@@ -72,8 +72,8 @@ export default defineComponent({
           uidUser: receiveMessage.uidUser,
           message: receiveMessage.content
         }
-        if (receiveMessage.content === "----Пользователь покинул чат----") {
-          formData.message = "Пользователь покинул чат"
+        if (receiveMessage.content === "---- L'utilisateur a quitté le chat ----") {
+          formData.message = "L'utilisateur a quitté le chat"
           const formDataLeaveRoom = {
             uidRoom: room.value[0].uid_room,
             uidUser: room.value[0].members[0],
@@ -87,10 +87,10 @@ export default defineComponent({
         await messageStore.actReceiveMessage(formData)
       }
       socket.onclose = () => {
-        console.log("Socket закрыт")
+        console.log("Socket Fermé")
       }
       socket.onerror = () => {
-        console.log("Socket произошла ошибка")
+        console.log("Socket Une erreur est survenue")
       }
     }
 
@@ -100,11 +100,11 @@ export default defineComponent({
           if (roomData.members.includes(userUid) === true) {
             isConnectChat.value = true
           } else {
-            notifyNeed("Этот заказ уже закреплён за другим пользователем", "warning", "top", 3000)
+            notifyNeed("Cette commande a déjà été attribuée à un autre utilisateur", "warning", "top", 3000)
           }
         } else {
           if (roomData.members.includes(userUid) === false) {
-            notifyNeed("Успешное подключение к чату. Этот чат закрепился за вами", "positive", "top-right", 2000)
+            notifyNeed("Connexion de chat réussie.Ce chat est corrigé après toi", "positive", "top-right", 2000)
             ordersStore.orders.filter((e) => {
               if (e.uid_order === route.params.id) {
                 e.member_fixed = userStore.userProfile[0].username
@@ -116,13 +116,13 @@ export default defineComponent({
           }
         }
       } else {
-        notifyNeed("Пользователь закрыл чат. Отправлять сообщений невозможно", "warning", "top", 3000)
+        notifyNeed("L'utilisateur a fermé le chat.Il est impossible d'envoyer des messages", "warning", "top", 3000)
       }
     }
 
     const sendMessage = async (data) => { // отправка сообщения по сокетам
       if (order.value[0].status === "Chat closed" || isUserCloseChat.value === true) {
-        notifyNeed("Пользователь закрыл чат. Отправлять сообщений невозможно", "warning", "top", 3000)
+        notifyNeed("L'utilisateur a fermé le chat.Il est impossible d'envoyer des messages", "warning", "top", 3000)
       } else {
         if (isConnectChat.value === true) {
           const formData = {
@@ -133,7 +133,7 @@ export default defineComponent({
           await messageStore.actCreateMessage(formData)
           socket.send(data)
         } else {
-          notifyNeed("Подключитесь к чату, прежде чем отправлять сообщение", "warning", "top", 3000)
+          notifyNeed("Connectez-vous au chat avant d'envoyer un message", "warning", "top", 3000)
         }
       }
     }
@@ -142,7 +142,7 @@ export default defineComponent({
       let message = data
       console.log("data -->", data)
       if (order.value[0].status === "Chat closed" || isUserCloseChat.value === true) {
-        notifyNeed("Пользователь закрыл чат. Отправлять сообщений невозможно", "warning", "top", 3000)
+        notifyNeed("L'utilisateur a fermé le chat.Il est impossible d'envoyer des messages", "warning", "top", 3000)
       } else {
         if (isConnectChat.value === true) {
           const formData = {
@@ -151,16 +151,16 @@ export default defineComponent({
             message: message
           }
           if (message === "----CODE----") {
-            formData.message = "Отправили действие на получение кода"
+            formData.message = "Envoyé une action pour recevoir du code"
           }
           if (message === "----PIN----") {
-            formData.message = "Отправили действие на получение пин кода"
+            formData.message = "Envoyé une action pour recevoir le code PIN"
           }
           if (message === "----CANCELCARD----") {
-            formData.message = "Отправили действие на отклонение карты пользователя"
+            formData.message = "Envoyé l'action à la déviation de la carte utilisateur"
           }
           if (message === "----BLOCKIP----") {
-            formData.message = "Отправили действие на блокировку ip адреса пользователя"
+            formData.message = "A envoyé l'action pour bloquer l'adresse IP de l'utilisateur"
             const formDataLeaveRoom = {
               uidRoom: room.value[0].uid_room,
               uidUser: room.value[0].members[0],
@@ -169,16 +169,16 @@ export default defineComponent({
             if (roomStore.isLeaveRoom === true) {
               isUserCloseChat.value = true
               order.value[0].status = "Chat closed"
-              notifyNeed("Ip адрес пользователя был успешно добавлен в чёрный список. Чат автоматически был закрыт", "warning", "top", 4000)
+              notifyNeed("L'adresse IP de l'utilisateur a été ajoutée avec succès à la liste noire.Le chat a été automatiquement fermé", "warning", "top", 4000)
             }
           }
           if (message === "----RESET----") {
-            formData.message = "Отправили действие на сброс формы с ошибкой"
+            formData.message = "Envoyé une action pour réinitialiser le formulaire avec une erreur"
           }
           await messageStore.actCreateMessage(formData)
           socket.send(data)
         } else {
-          notifyNeed("Подключитесь к чату, прежде чем отправлять сообщение", "warning", "top", 3000)
+          notifyNeed("Connectez-vous au chat avant d'envoyer un message", "warning", "top", 3000)
         }
       }
     }

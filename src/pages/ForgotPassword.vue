@@ -4,10 +4,10 @@
     <q-dialog v-model="alertForgotPassword">
       <q-card>
         <q-card-section>
-          <div class="text-h6">Восстановление пароля</div>
+          <div class="text-h6">Récupération de mot de passe</div>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          На email <b>{{ alertEmailText }}</b> отправлено письмо. Перейдите по ссылке в письме для восстановления пароля.
+          На email <b>{{ alertEmailText }}</b> Envoyé une lettre.Suivez le lien dans la lettre pour restaurer le mot de passe.
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="OK" color="green" v-close-popup @click="alertClose" />
@@ -18,26 +18,26 @@
       <div class="container">
         <div class="main-login">
           <div class="main-login-content">
-            <div class="main-login-content__title">Забыли пароль</div>
+            <div class="main-login-content__title">Mot de passe oublié</div>
             <form class="main-login-content__form" @submit.prevent="submitForgotPasswordForm">
               <div class="main-login-content__form_input" :class="{ error: v$.emailUser.$errors.length }">
                 <input class="main-login-content__form_input_i"
                   :class="{ 'input-error': v$.emailUser.$errors.length > 0 }" type="text" placeholder="Email"
                   v-model.trim="forgotPasswordForm.emailUser" @blur="v$.emailUser.$touch()" />
                 <div class="input-errors" v-for="error of v$.emailUser.$errors" :key="error.$uid">
-                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите email" :
+                  <div class="error-msg">{{ error.$message === "Value is required" ? "Veuillez saisir le courrier électronique" :
                     error.$message === "Value is not a valid email address" ?
-                      "Значение не является действительным адресом электронной почты" : "" }}
+                      "La valeur n'est pas l'adresse e-mail réelle" : "" }}
                   </div>
                 </div>
               </div>
               <div class="main-login-content__form_submit">
                 <button type="submit" :disabled="isButtonDisabled" @click.prevent="submitForgotPasswordForm">
-                  Восстановить пароль
+                  Restaurer le mot de passe
                 </button>
               </div>
               <div class="main-login-content__form_back">
-                <router-link to="/sign-in">Назад</router-link>
+                <router-link to="/sign-in">Dos</router-link>
               </div>
             </form>
           </div>
@@ -101,7 +101,7 @@ export default defineComponent({
     const submitForgotPasswordForm = async () => {
       v$.value.$touch()
       if (v$.value.$invalid) {
-        notifyNeed("Не все поля заполнены", "warning", "top", 1000)
+        notifyNeed("Tous les champs ne sont pas remplis", "warning", "top", 1000)
       } else {
         isButtonDisabled.value = true
         $q.loading.show()
@@ -114,10 +114,10 @@ export default defineComponent({
         alertEmailText.value = forgotPasswordForm.value.emailUser
         alertForgotPassword.value = true
         if (recoveryStore.isRecoveryPasswordSendMessage === true) {
-          notifyNeed("Успешная отправка письма восстановления на вашу почту", "positive", "top-right", 2000)
+          notifyNeed("Réussi à envoyer une lettre de restauration à votre courrier", "positive", "top-right", 2000)
           forgotPasswordForm.value.emailUser = ""
         } else {
-          notifyNeed("Произошла ошибка отправки письма восстановления на вашу почту. Попробуйте позже", "warning", "top-right", 2000)
+          notifyNeed("Il y a eu une erreur dans l'envoi d'une lettre de restauration à votre courrier.essayer plus tard", "warning", "top-right", 2000)
           forgotPasswordForm.value.emailUser = ""
         }
       }
@@ -236,7 +236,7 @@ export default defineComponent({
 
 .main-login-content__form_forgot {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   margin: 0 0 10px;
 }
 

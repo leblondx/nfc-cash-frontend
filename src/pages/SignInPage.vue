@@ -231,7 +231,7 @@ export default defineComponent({
 
 .main-login-content__form_forgot {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   margin: 0 0 10px;
 }
 
