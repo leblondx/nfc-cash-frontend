@@ -5,9 +5,9 @@
         {{ title }}
       </q-toolbar-title>
       <q-tabs v-model="tab" shrink>
-        <!-- <q-tab name="home" label="Главная" @click="changeTab('Главная')" /> -->
-        <q-tab name="sign-up" label="Регистрация" @click="changeTab('Регистрация')" />
-        <q-tab name="sign-in" label="Войти" @click="changeTab('Войти')" />
+        <!-- <q-tab name="home" label="maison" @click="changeTab('maison')" /> -->
+        <q-tab name="sign-up" label="Inscription" @click="changeTab('Inscription')" />
+        <q-tab name="sign-in" label="Entrer" @click="changeTab('Entrer')" />
       </q-tabs>
     </q-toolbar>
   </q-header>
@@ -28,7 +28,7 @@ export default defineComponent({
   setup(props) {
     const router = useRouter()
 
-    const title = ref('Главная')
+    const title = ref('maison')
     const tab = ref("")
 
     const changeTab = (needName) => {
@@ -46,15 +46,15 @@ export default defineComponent({
 
     onMounted(() => {
       if (props.activePage === "home") {
-        title.value = "Главная"
+        title.value = "maison"
         tab.value = "home"
       }
       if (props.activePage === "sign-up") {
-        title.value = "Регистрация"
+        title.value = "Inscription"
         tab.value = "sign-up"
       }
       if (props.activePage === "sign-in") {
-        title.value = "Войти"
+        title.value = "Entrer"
         tab.value = "sign-in"
       }
     })

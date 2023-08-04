@@ -5,39 +5,39 @@
       <div class="container">
         <div class="main-login">
           <div class="main-login-content">
-            <div class="main-login-content__title">Войти в аккаунт</div>
+            <div class="main-login-content__title">Entrez le compte</div>
             <div class="main-login-content__signupl">
-              <div class="main-login-content__signupl_text">У вас нет аккаунта?</div>
+              <div class="main-login-content__signupl_text">Vous n'avez pas de compte?</div>
               <div class="main-login-content__signupl_link">
-                <router-link to="/sign-up">Регистрация</router-link>
+                <router-link to="/sign-up">Inscription</router-link>
               </div>
             </div>
             <form class="main-login-content__form" @submit.prevent="submitAuthForm">
               <div class="main-login-content__form_input" :class="{ error: v$.username.$errors.length }">
                 <input class="main-login-content__form_input_i" :class="{ 'input-error': v$.username.$errors.length > 0 }"
-                  type="text" placeholder="Логин" v-model.trim="authForm.username" @blur="v$.username.$touch()" />
+                  type="text" placeholder="Nom d'utilisateur" v-model.trim="authForm.username" @blur="v$.username.$touch()" />
                 <div class="input-errors" v-for="error of v$.username.$errors" :key="error.$uid">
-                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите логин" : "" }}
+                  <div class="error-msg">{{ error.$message === "Value is required" ? "Veuillez saisir la connexion" : "" }}
                   </div>
                 </div>
               </div>
               <div class="main-login-content__form_input" :class="{ error: v$.password.$errors.length }">
                 <input class="main-login-content__form_input_i" :class="{ 'input-error': v$.password.$errors.length > 0 }"
-                  type="password" placeholder="Пароль" v-model.trim="authForm.password" @blur="v$.password.$touch()" />
+                  type="password" placeholder="Mot de passe" v-model.trim="authForm.password" @blur="v$.password.$touch()" />
                 <div class="input-errors" v-for="error of v$.password.$errors" :key="error.$uid">
-                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите пароль" :
+                  <div class="error-msg">{{ error.$message === "Value is required" ? "Veuillez entrer un mot de passe" :
                     error.$message === "This field should be at least 8 characters long" ?
-                      "Это поле должно содержать не менее 8 символов" : "" }}
+                      "Ce champ doit contenir au moins 8 caractères" : "" }}
                   </div>
                 </div>
               </div>
               <div class="main-login-content__form_forgot">
                 <div class="main-login-content__form_forgot_link">
-                  <router-link to="/forgot-password">Забыли пароль?</router-link>
+                  <router-link to="/forgot-password">Mot de passe oublié?</router-link>
                 </div>
               </div>
               <div class="main-login-content__form_submit">
-                <button type="submit" @click.prevent="submitAuthForm">Войти</button>
+                <button type="submit" @click.prevent="submitAuthForm">Entrer</button>
               </div>
             </form>
           </div>

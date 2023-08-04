@@ -51,14 +51,14 @@ export default defineComponent({
     const notifyNeed = (data) => {
       $q.notify({
         message: `
-        <div><div><strong style='border-bottom: 1px solid #c4c4c4'>ID</strong>:${data.uid_event}</div><div><strong style='border-bottom: 1px solid #c4c4c4'>Создано</strong>:${data.created}</div><div><strong style='border-bottom: 1px solid #c4c4c4'>Последний онлайн</strong>: ${data.lastOnline}</div><div><strong style='border-bottom: 1px solid #c4c4c4'>Статус</strong>: ${data.status}</div></div>`,
+        <div><div><strong style='border-bottom: 1px solid #c4c4c4'>ID</strong>:${data.uid_event}</div><div><strong style='border-bottom: 1px solid #c4c4c4'>Créé</strong>:${data.created}</div><div><strong style='border-bottom: 1px solid #c4c4c4'>Le dernier en ligne</strong>: ${data.lastOnline}</div><div><strong style='border-bottom: 1px solid #c4c4c4'>Statut</strong>: ${data.status}</div></div>`,
         color: 'green',
         multiLine: true,
         position: "top-right",
         html: true,
         actions: [
           {
-            label: 'Открыть', color: 'yellow', handler: () => {
+            label: 'Ouvrir', color: 'yellow', handler: () => {
               router.push(`/home/chats/${data.id}`)
             }
           }

@@ -1,7 +1,7 @@
 import { boot } from "quasar/wrappers";
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/";
+const API_URL = "https://data.humaco.io/";
 
 const api = axios.create({
   withCredentials: true,
@@ -36,7 +36,7 @@ api.interceptors.response.use(
         return $api.request(originalRequest);
       } catch (error) {
         console.log(
-          "Не авторизован. error in interceptors.response error callback -->",
+          "Non autorisé. Erreur dans les intercepteurs axios.js -->",
           error
         );
       }

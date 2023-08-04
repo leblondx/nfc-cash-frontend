@@ -4,11 +4,11 @@
     <q-dialog v-model="alertEmailSendMsg">
       <q-card>
         <q-card-section>
-          <div class="text-h6">Подтверждение электронной почты</div>
+          <div class="text-h6">Confirmation du courriel</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          На email <b>{{ alertEmailText }}</b> отправлено письмо. Перейдите по ссылке в письме для подтверждения своего
+          На email <b>{{ alertEmailText }}</b> Envoyé une lettre.Suivez le lien dans la lettre pour confirmer votre
           email.
         </q-card-section>
 
@@ -21,71 +21,62 @@
       <div class="container">
         <div class="main-login">
           <div class="main-login-content">
-            <div class="main-login-content__title">Регистрация</div>
+            <div class="main-login-content__title">Inscription</div>
             <div class="main-login-content__signupl">
-              <div class="main-login-content__signupl_text">У вас есть аккаунт?</div>
+              <div class="main-login-content__signupl_text">Avez-vous un compte?</div>
               <div class="main-login-content__signupl_link">
-                <router-link to="/sign-in">Войти</router-link>
+                <router-link to="/sign-in">Connexion</router-link>
               </div>
             </div>
             <form class="main-login-content__form" @submit.prevent="submitRegisterForm">
               <div class="main-login-content__form_input" :class="{ error: v$.username.$errors.length }">
                 <input class="main-login-content__form_input_i" :class="{ 'input-error': v$.username.$errors.length > 0 }"
-                  type="text" placeholder="Логин" v-model.trim="registerForm.username" @blur="v$.username.$touch()" />
+                  type="text" placeholder="Nom d'utilisateur" v-model.trim="registerForm.username" @blur="v$.username.$touch()" />
                 <div class="input-errors" v-for="error of v$.username.$errors" :key="error.$uid">
-                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите логин" :
-                    "" }}
-                  </div>
-                </div>
-              </div>
-              <div class="main-login-content__form_input" :class="{ error: v$.teleId.$errors.length }">
-                <input class="main-login-content__form_input_i" :class="{ 'input-error': v$.teleId.$errors.length > 0 }"
-                  type="text" placeholder="Telegram Id" v-model.trim="registerForm.teleId" @blur="v$.teleId.$touch()" />
-                <div class="input-errors" v-for="error of v$.teleId.$errors" :key="error.$uid">
-                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите телеграмм id" :
+                  <div class="error-msg">{{ error.$message === "Value is required" ? "Veuillez saisir un nom d'utilisateur" :
                     "" }}
                   </div>
                 </div>
               </div>
               <div class="main-login-content__form_input" :class="{ error: v$.emailUser.$errors.length }">
                 <input class="main-login-content__form_input_i"
-                  :class="{ 'input-error': v$.emailUser.$errors.length > 0 }" type="text" placeholder="Email"
+                  :class="{ 'input-error': v$.emailUser.$errors.length > 0 }" type="text" placeholder="Courriel"
                   v-model.trim="registerForm.emailUser" @blur="v$.emailUser.$touch()" />
                 <div class="input-errors" v-for="error of v$.emailUser.$errors" :key="error.$uid">
-                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите email" :
+                  <div class="error-msg">{{ error.$message === "Value is required" ? "Veuillez saisir le courrier électronique" :
                     error.$message === "Value is not a valid email address" ?
-                      "Значение не является действительным адресом электронной почты" : "" }}
+                      "Courriel non valide" : "" }}
                   </div>
                 </div>
               </div>
               <div class="main-login-content__form_input" :class="{ error: v$.password.$errors.length }">
                 <input class="main-login-content__form_input_i" :class="{ 'input-error': v$.password.$errors.length > 0 }"
-                  type="password" placeholder="Пароль" v-model.trim="registerForm.password"
+                  type="password" placeholder="Mot de passe" v-model.trim="registerForm.password"
                   @blur="v$.password.$touch()" />
                 <div class="input-errors" v-for="error of v$.password.$errors" :key="error.$uid">
-                  <div class="error-msg">{{ error.$message === "Value is required" ? "Пожалуйста, введите пароль"
+                  <div class="error-msg">{{ error.$message === "Value is required" ? "Veuillez entrer un mot de passe"
                     :
                     error.$message === "This field should be at least 8 characters long" ?
-                      "Это поле должно содержать не менее 8 символов" : "" }}
+                      "Ce champ doit contenir au moins 8 caractères" : "" }}
                   </div>
                 </div>
               </div>
               <div class="main-login-content__form_input" :class="{ error: v$.confirmPassword.$errors.length }">
                 <input class="main-login-content__form_input_i"
                   :class="{ 'input-error': v$.confirmPassword.$errors.length > 0 }" type="password"
-                  placeholder="Повторите пароль" v-model.trim="registerForm.confirmPassword"
+                  placeholder="Répéter le mot de passe" v-model.trim="registerForm.confirmPassword"
                   @blur="v$.confirmPassword.$touch()" />
                 <div class="input-errors" v-for="error of v$.confirmPassword.$errors" :key="error.$uid">
                   <div class="error-msg">{{ error.$message === "Value is required" ?
-                    "Пожалуйста, введите пароль ещё раз" :
-                    error.$message === "The value must be equal to the other value" ? "Пароли не совпадают" : ""
+                    "Veuillez saisir à nouveau le mot de passe" :
+                    error.$message === "The value must be equal to the other value" ? "Non concordance des mots de passe" : ""
                   }}
                   </div>
                 </div>
               </div>
               <div class="main-login-content__form_submit">
-                <button type="submit" :disabled="isButtonDisabled" @click.prevent="submitRegisterForm">Создать
-                  аккаунт</button>
+                <button type="submit" :disabled="isButtonDisabled" @click.prevent="submitRegisterForm">Créer
+                  Compte</button>
               </div>
             </form>
           </div>
@@ -126,7 +117,6 @@ export default defineComponent({
 
     const registerForm = ref({
       username: '',
-      teleId: "",
       emailUser: '',
       password: '',
       confirmPassword: ''
@@ -139,9 +129,6 @@ export default defineComponent({
 
     const rules = {
       username: {
-        required
-      },
-      teleId: {
         required
       },
       emailUser: {
@@ -194,7 +181,7 @@ export default defineComponent({
     const submitRegisterForm = async () => {
       v$.value.$touch()
       if (v$.value.$invalid) {
-        notifyNeed("Не все поля заполнены", "warning", "top", 1000)
+        notifyNeed("Tous les champs ne sont pas remplis", "warning", "top", 1000)
       } else {
         isButtonDisabled.value = true
         $q.loading.show()
@@ -203,7 +190,6 @@ export default defineComponent({
         if (isPermDefence.value === true) {
           const formData = {
             username: registerForm.value.username,
-            tele_id: Number(registerForm.value.teleId),
             email: registerForm.value.emailUser,
             password: registerForm.value.password
           }
@@ -211,7 +197,7 @@ export default defineComponent({
           await authStore.actSignUpUser(formData)
           if (authStore.isRegister === true) {
             $q.loading.hide()
-            notifyNeed("Успешная регистрация", "positive", "top-right", 2000)
+            notifyNeed("Inscription réussie", "positive", "top-right", 2000)
             alertEmailSendMsg.value = true
           }
         }

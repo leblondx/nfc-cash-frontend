@@ -16,7 +16,7 @@ export const useAuthStore = defineStore("auth", {
   getters: {},
   actions: {
     async actSignUpUser(formData) {
-      // регистрация пользователя
+      // Enregistrement de l'utilisateur
       try {
         const response = await authService.signUp(formData);
         console.log("response.data -->", response.data);
@@ -28,7 +28,7 @@ export const useAuthStore = defineStore("auth", {
       }
     },
     async actSignInUser(formData) {
-      // авторизация пользователя
+      // Autorisation de l'utilisateur
       try {
         const response = await authService.signIn(formData);
         console.log("response.data -->", response.data);

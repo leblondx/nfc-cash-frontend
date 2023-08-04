@@ -79,7 +79,7 @@ export default route(function () {
           Router.push("/");
         }
       }
-      // Нужно будет сделать проверку потом на запрос для проверки валидности токена
+      // Il sera nécessaire de faire un chèque plus tard sur la demande de vérification de la validité du jeton
       // console.log("tokenUser -->", tokenUser);
       // const response = await axios.get(
       //   "http://localhost:8080/api-v1/validate-token",
